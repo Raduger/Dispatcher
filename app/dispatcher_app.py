@@ -27,7 +27,7 @@ def handle_upload(job_id, file, user_id):
         sb.storage.from_('proofs').upload(path=path, file=file.getvalue(), file_options={"content-type": file.type})
         url = sb.storage.from_('proofs').get_public_url(path)
         sb.table("jobs").update({"status": "completed", "proof_url": url, "completed_at": "now()"}).eq("id", job_id).execute()
-        st.success("Job Finalized! Earnings Updated.")
+        st.success("Job Finalized!")
         st.rerun()
     except Exception as e: st.error(f"Upload failed: {e}")
 
@@ -38,15 +38,23 @@ def render_app():
         sb.table("profiles").update({"is_premium": True}).eq("id", user.id).execute()
         st.query_params.clear(); st.toast("Premium Active! 👑")
 
-    prof = sb.table("profiles").select("*").eq("id", user.id).single().execute().data
-    role, is_p = prof.get('role', 'driver'), prof.get('is_premium', False)
+    # --- FIXED: SAFE PROFILE FETCH ---
+    try:
+        # Using .maybe_single() or limit(1) prevents the APIError if row is missing
+        prof_res = sb.table("profiles").select("*").eq("id", user.id).execute()
+        prof = prof_res.data[0] if prof_res.data else {}
+        role = prof.get('role', 'driver')
+        is_p = prof.get('is_premium', False)
+    except Exception as e:
+        role, is_p = 'driver', False
+        st.sidebar.warning("Profile not initialized. Defaulting to Driver.")
 
+    st.sidebar.write(f"Logged in as: **{role.upper()}** {'👑' if is_p else ''}")
     menu = st.sidebar.radio("Navigation", ["Dashboard", "Earnings", "Premium", "Admin"])
 
     if menu == "Dashboard":
         st.header(translate('job_title', lang))
         
-        # Dispatcher: Post Job
         if role in ['dispatch', 'admin']:
             with st.expander("➕ Post New Load"):
                 t = st.text_input("Job Description")
@@ -55,7 +63,6 @@ def render_app():
                     sb.table("jobs").insert({"title": t, "revenue": r, "user_id": user.id, "status": "pending"}).execute()
                     st.success("Posted!"); st.rerun()
 
-        # Driver: Active Jobs (Refined)
         if role == 'driver':
             st.subheader("🛠️ My Active Jobs")
             ajs = sb.table("jobs").select("*").eq("driver_id", user.id).eq("status", "in_progress").execute().data
@@ -68,9 +75,9 @@ def render_app():
                     if up_file and c2.button("Complete", key=f"fin_{aj['id']}"):
                         handle_upload(aj['id'], up_file, user.id)
 
-        # Job Board
         st.subheader("🌍 Available Loads")
-        jobs = sb.table("jobs").select("*").eq("status", "pending").order("is_boosted", desc=True).execute().data
+        jobs_res = sb.table("jobs").select("*").eq("status", "pending").order("is_boosted", desc=True).execute()
+        jobs = jobs_res.data if jobs_res.data else []
         for j in jobs:
             with st.container(border=True):
                 col1, col2, col3 = st.columns([3, 1, 1])
@@ -83,14 +90,16 @@ def render_app():
     elif menu == "Earnings":
         st.header(translate('earnings', lang))
         all_j = sb.table("jobs").select("*").eq("driver_id", user.id).execute().data
-        comp = [j for j in all_j if j['status'] == 'completed']
-        pend = [j for j in all_j if j['status'] == 'in_progress']
-        
-        c1, c2, c3 = st.columns(3)
-        c1.metric("Total Paid", f"${sum(j.get('revenue', 0) for j in comp):,.2f}")
-        c2.metric("Pending", f"${sum(j.get('revenue', 0) for j in pend):,.2f}")
-        c3.metric("Total Jobs", len(all_j))
-        if all_j: st.table(pd.DataFrame(all_j)[['title', 'revenue', 'status']])
+        if all_j:
+            comp = [j for j in all_j if j['status'] == 'completed']
+            pend = [j for j in all_j if j['status'] == 'in_progress']
+            c1, c2, c3 = st.columns(3)
+            c1.metric("Total Paid", f"${sum(j.get('revenue', 0) for j in comp):,.2f}")
+            c2.metric("Pending", f"${sum(j.get('revenue', 0) for j in pend):,.2f}")
+            c3.metric("Total Jobs", len(all_j))
+            st.table(pd.DataFrame(all_j)[['title', 'revenue', 'status']])
+        else:
+            st.info("No earnings records yet.")
 
     elif menu == "Premium":
         if is_p: st.success("Premium Active 👑")
@@ -111,20 +120,20 @@ def render_app():
         t1, t2, t3 = st.tabs(["Jobs", "Languages", "Diagnostic"])
         with t2:
             data = sb.table("translations").select("*").execute().data
-            sk = st.selectbox("Key", [i['key'] for i in data])
-            curr = next(i for i in data if i['key'] == sk)
-            with st.form("tr"):
-                ups, cols = {}, st.columns(2)
-                for i, (cd, nm) in enumerate(LANGUAGES.items()):
-                    ups[cd] = cols[i%2].text_input(nm, value=curr.get(cd, ""))
-                if st.form_submit_button("Save"):
-                    sb.table("translations").update(ups).eq("key", sk).execute()
-                    st.rerun()
+            if data:
+                sk = st.selectbox("Key", [i['key'] for i in data])
+                curr = next(i for i in data if i['key'] == sk)
+                with st.form("tr"):
+                    ups, cols = {}, st.columns(2)
+                    for i, (cd, nm) in enumerate(LANGUAGES.items()):
+                        ups[cd] = cols[i%2].text_input(nm, value=curr.get(cd, ""))
+                    if st.form_submit_button("Save"):
+                        sb.table("translations").update(ups).eq("key", sk).execute()
+                        st.rerun()
         with t3:
             for k in ["STRIPE_SECRET_KEY", "STRIPE_PRICE_ID", "SUPABASE_URL"]:
                 v = os.getenv(k)
-                if v: st.success(f"✅ {k} found")
-                else: st.error(f"❌ {k} missing")
+                st.write(f"{k}: {'✅' if v else '❌'}")
 
 def main():
     st.set_page_config(page_title="ProDispatcher", layout="wide")
@@ -138,9 +147,18 @@ def main():
         with t1:
             em, pw = st.text_input("Email"), st.text_input("Password", type="password")
             if st.button("Login"):
-                res = sb.auth.sign_in_with_password({"email": em, "password": pw})
-                st.session_state.user = res.user
-                st.rerun()
+                try:
+                    res = sb.auth.sign_in_with_password({"email": em, "password": pw})
+                    st.session_state.user = res.user
+                    st.rerun()
+                except Exception as e: st.error(f"Login failed: {e}")
+        with t2:
+            nem, npw = st.text_input("New Email"), st.text_input("New Password", type="password")
+            if st.button("Register"):
+                try:
+                    sb.auth.sign_up({"email": nem, "password": npw})
+                    st.success("Check your email!")
+                except Exception as e: st.error(f"Signup failed: {e}")
     else: render_app()
 
 if __name__ == "__main__": main()
