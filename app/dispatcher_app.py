@@ -3,6 +3,7 @@ import stripe
 import os
 import sys
 import pandas as pd
+import plotly.express as px
 from supabase import create_client
 from dotenv import load_dotenv
 
@@ -35,10 +36,19 @@ def sync_profile(user_id):
                 sb.table("profiles").insert({"id": user_id, "role": role}).execute()
                 st.rerun()
             except Exception as e:
-                if "42501" in str(e): st.error("🔑 **RLS Error:** Run the SQL Policy for 'profiles'.")
+                if "42501" in str(e): st.error("🔑 RLS Error: Run the SQL Policy for 'profiles'.")
                 return {"role": "driver", "is_premium": False}
         return res.data[0]
     except: return {"role": "driver", "is_premium": False}
+
+def handle_upload(job_id, file, user_id):
+    try:
+        path = f"proofs/{user_id}/{job_id}_{file.name}"
+        sb.storage.from_('proofs').upload(path=path, file=file.getvalue(), file_options={"content-type": file.type})
+        url = sb.storage.from_('proofs').get_public_url(path)
+        sb.table("jobs").update({"status": "completed", "proof_url": url}).eq("id", job_id).execute()
+        st.success("Delivery Confirmed!"); st.rerun()
+    except Exception as e: st.error(f"Upload failed: {e}")
 
 def render_app():
     user, lang = st.session_state.user, st.session_state.get('lang', 'en')
@@ -54,75 +64,84 @@ def render_app():
         st.session_state.clear(); st.rerun()
 
     if menu == "Dashboard":
-        st.header(translate('job_title', lang))
+        t_title = translate('job_title', lang)
+        st.header(t_title if t_title != 'job_title' else "Available Loads")
+
         if role in ['dispatch', 'admin']:
-            with st.expander("➕ Post Job"):
-                t = st.text_input("Desc")
-                r = st.number_input("Rev $", min_value=0.0)
-                if st.button("Post"):
+            with st.expander("➕ Post New Job"):
+                t = st.text_input("Description")
+                r = st.number_input("Revenue $", min_value=0.0)
+                if st.button("Post Job"):
                     sb.table("jobs").insert({"title": t, "revenue": r, "user_id": user.id, "status": "pending"}).execute()
                     st.rerun()
 
-        st.subheader("🛠️ Active")
+        # ACTIVE JOBS
+        st.subheader("🛠️ My Active Trips")
         try:
             ajs = sb.table("jobs").select("*").eq("driver_id", user.id).eq("status", "in_progress").execute().data
+            if not ajs: st.info("No active trips. Claim a load below!")
             for aj in (ajs or []):
                 with st.container(border=True):
                     c1, c2 = st.columns([2, 1])
                     c1.write(f"**{aj['title']}** (${aj['revenue']})")
-                    f = c2.file_uploader("BOL", key=f"f{aj['id']}")
-                    if f and c2.button("Finish", key=f"b{aj['id']}"): 
-                        # handle_upload logic here
-                        pass
-        except: st.error("Database connection issue.")
+                    f = c2.file_uploader("Upload BOL", key=f"f{aj['id']}")
+                    if f and c2.button("Finish Job", key=f"b{aj['id']}"): handle_upload(aj['id'], f, user.id)
+        except: st.error("Cannot load active trips. Check 'jobs' table RLS.")
+
+        # JOB BOARD
+        st.subheader("🌍 Public Job Board")
+        try:
+            jobs = sb.table("jobs").select("*").eq("status", "pending").execute().data
+            for j in (jobs or []):
+                with st.container(border=True):
+                    c1, c2, c3 = st.columns([3, 1, 1])
+                    c1.write(f"**{j['title']}**")
+                    c2.write(f"${j['revenue']}")
+                    if role == 'driver' and c3.button("Claim", key=f"cl{j['id']}"):
+                        sb.table("jobs").update({"driver_id": user.id, "status": "in_progress"}).eq("id", j['id']).execute()
+                        st.rerun()
+        except: st.warning("Job board temporarily unavailable.")
 
     elif menu == "Admin" and role == 'admin':
-        t1, t2, t3, t4 = st.tabs(["Jobs", "Languages", "👥 Users", "🛡️ Health"])
+        t1, t2, t3, t4 = st.tabs(["Stats", "Languages", "👥 Users", "🛡️ Health"])
+
+        with t1: # REVENUE CHART
+            st.subheader("Financial Overview")
+            try:
+                data = sb.table("jobs").select("revenue, status, created_at").execute().data
+                if data:
+                    df = pd.DataFrame(data)
+                    fig = px.bar(df, x="status", y="revenue", color="status", title="Revenue by Status")
+                    st.plotly_chart(fig, use_container_width=True)
+            except: st.write("No data for charts yet.")
 
         with t3: # USER MANAGEMENT
             st.subheader("User Directory")
-            users_res = sb.table("profiles").select("*").execute().data
-            if users_res:
-                df_u = pd.DataFrame(users_res)
-                st.dataframe(df_u[['id', 'role', 'is_premium']], use_container_width=True)
-                
-                with st.expander("Change User Role"):
-                    uid = st.text_input("Target User ID")
-                    new_role = st.selectbox("New Role", ["driver", "dispatch", "admin"])
-                    if st.button("Update Role"):
-                        sb.table("profiles").update({"role": new_role}).eq("id", uid).execute()
-                        st.success("Role Updated!"); st.rerun()
-
-        with t4: # HEALTH & SCHEMA DOCTOR
-            st.subheader("System Diagnostic")
-            c1, c2 = st.columns(2)
             try:
-                sb.table("profiles").select("id").limit(1).execute()
-                c1.success("Supabase: OK")
-            except: c1.error("Supabase: FAIL")
-            
-            if st.button("Check Table Integrity"):
+                users_res = sb.table("profiles").select("*").execute().data
+                if users_res:
+                    df_u = pd.DataFrame(users_res)
+                    st.dataframe(df_u[['id', 'role', 'is_premium']], use_container_width=True)
+            except: st.error("Could not load user list.")
+
+        with t4: # HEALTH
+            st.subheader("System Diagnostic")
+            if st.button("Run Schema Check"):
                 try:
                     test = sb.table("jobs").select("*").limit(1).execute()
-                    cols = test.data[0].keys() if test.data else []
-                    req = ["driver_id", "status", "revenue", "user_id"]
-                    miss = [c for c in req if c not in cols]
-                    if not miss: st.success("Schema Valid!")
-                    else: st.error(f"Missing: {miss}")
+                    st.success("Database Connection: OK")
+                    st.write("Columns found:", list(test.data[0].keys()) if test.data else "Table empty but accessible")
                 except Exception as e: st.error(f"Error: {e}")
-
-            with st.expander("Show SQL Repair Script"):
-                st.code("ALTER TABLE public.jobs ADD COLUMN IF NOT EXISTS driver_id uuid;")
 
 def main():
     if 'user' not in st.session_state:
-        # Simple Login UI
         st.title("ProDispatcher")
-        e = st.text_input("Email")
-        p = st.text_input("Pass", type="password")
+        e, p = st.text_input("Email"), st.text_input("Password", type="password")
         if st.button("Login"):
-            res = sb.auth.sign_in_with_password({"email": e, "password": p})
-            st.session_state.user = res.user; st.rerun()
+            try:
+                res = sb.auth.sign_in_with_password({"email": e, "password": p})
+                st.session_state.user = res.user; st.rerun()
+            except: st.error("Login failed")
     else: render_app()
 
 if __name__ == "__main__": main()
