@@ -17,7 +17,6 @@ except ImportError:
 st.set_page_config(page_title="ProDispatcher", layout="wide")
 load_dotenv()
 
-# Module Discovery
 current_dir = os.path.dirname(os.path.abspath(__file__))
 root_path = os.path.abspath(os.path.join(current_dir, ".."))
 if root_path not in sys.path: sys.path.insert(0, root_path)
@@ -34,15 +33,21 @@ PRICE_ID = os.getenv("STRIPE_PRICE_ID")
 
 # --- DATABASE LOGIC ---
 def sync_profile(user_id):
+    """Resilient profile sync to bypass RLS recursion loops."""
     try:
         res = sb.table("profiles").select("*").eq("id", user_id).execute()
-        if not res.data:
-            c = sb.table("profiles").select("id", count="exact").limit(1).execute().count
-            role = "admin" if c == 0 else "driver"
-            sb.table("profiles").insert({"id": user_id, "role": role}).execute()
-            st.rerun()
-        return res.data[0]
-    except: return {"role": "driver", "is_premium": False}
+        if res.data: return res.data[0]
+        
+        # Determine role (first user = admin)
+        c = sb.table("profiles").select("id", count="exact").limit(1).execute().count
+        role = "admin" if c == 0 else "driver"
+        new_p = {"id": user_id, "role": role}
+        sb.table("profiles").insert(new_p).execute()
+        return new_p
+    except Exception as e:
+        if "42P17" in str(e):
+            st.sidebar.error("🔄 RLS Loop Detected. Run SQL fix.")
+        return {"role": "driver", "is_premium": False}
 
 def handle_upload(job_id, file, user_id):
     try:
@@ -59,10 +64,6 @@ def render_app():
     prof = sync_profile(user.id)
     role, is_p = prof.get('role', 'driver'), prof.get('is_premium', False)
 
-    if st.query_params.get("success") == "true":
-        sb.table("profiles").update({"is_premium": True}).eq("id", user.id).execute()
-        st.query_params.clear(); st.rerun()
-
     # Sidebar
     st.sidebar.title("🚚 ProDispatcher")
     st.sidebar.write(f"Role: **{role.upper()}** {'👑' if is_p else ''}")
@@ -71,7 +72,6 @@ def render_app():
     l_name = st.sidebar.selectbox("Language", list(LANGUAGES.values()), index=list(LANGUAGES.keys()).index(lang))
     st.session_state.lang = [k for k, v in LANGUAGES.items() if v == l_name][0]
     
-    st.sidebar.divider()
     if st.sidebar.button("Logout"):
         st.session_state.clear(); st.rerun()
 
@@ -89,21 +89,20 @@ def render_app():
         # ACTIVE TRIPS
         st.subheader("🛠️ Active Trips")
         try:
-            aj_res = sb.table("jobs").select("*").eq("driver_id", user.id).eq("status", "in_progress").execute()
-            for aj in (aj_res.data or []):
+            aj = sb.table("jobs").select("*").eq("driver_id", user.id).eq("status", "in_progress").execute().data
+            for a in (aj or []):
                 with st.container(border=True):
                     c1, c2 = st.columns([2, 1])
-                    c1.write(f"**{aj['title']}** (${aj['revenue']})")
-                    f = c2.file_uploader("Upload BOL", key=f"f{aj['id']}")
-                    if f and c2.button("Confirm Delivery", key=f"b{aj['id']}"): handle_upload(aj['id'], f, user.id)
-        except Exception as e:
-            st.error(f"Table Access Error (Active): {e}")
+                    c1.write(f"**{a['title']}** (${a['revenue']})")
+                    f = c2.file_uploader("Upload BOL", key=f"f{a['id']}")
+                    if f and c2.button("Confirm Delivery", key=f"b{a['id']}"): handle_upload(a['id'], f, user.id)
+        except Exception as e: st.error(f"Active Jobs Error: {e}")
 
         # PUBLIC BOARD
         st.subheader("🌍 Open Loads")
         try:
-            jobs_res = sb.table("jobs").select("*").eq("status", "pending").execute()
-            for j in (jobs_res.data or []):
+            jobs = sb.table("jobs").select("*").eq("status", "pending").execute().data
+            for j in (jobs or []):
                 with st.container(border=True):
                     c1, c2, c3 = st.columns([3, 1, 1])
                     c1.write(f"{'🚀 ' if j.get('is_boosted') else ''}**{j['title']}**")
@@ -111,8 +110,7 @@ def render_app():
                     if role == 'driver' and c3.button("Claim", key=f"cl{j['id']}"):
                         sb.table("jobs").update({"driver_id": user.id, "status": "in_progress"}).eq("id", j['id']).execute()
                         st.rerun()
-        except Exception as e:
-            st.error(f"Table Access Error (Board): {e}")
+        except Exception as e: st.error(f"Board Error: {e}")
 
     elif menu == "Earnings":
         st.header(translate('earnings', lang))
@@ -124,26 +122,13 @@ def render_app():
                 st.dataframe(df[['title', 'revenue', 'status']], use_container_width=True)
         except: st.info("No earnings yet.")
 
-    elif menu == "Premium":
-        if is_p: st.success("Premium Active 👑")
-        else:
-            if st.button("Subscribe - $29/mo"):
-                try:
-                    s = stripe.checkout.Session.create(
-                        payment_method_types=['card'], line_items=[{'price': PRICE_ID, 'quantity': 1}],
-                        mode='subscription', success_url="https://pro-dispatcher.streamlit.app/?success=true",
-                        cancel_url="https://pro-dispatcher.streamlit.app/",
-                    )
-                    st.link_button("Pay Now", s.url)
-                except Exception as e: st.error(f"Stripe: {e}")
-
     elif menu == "Admin" and role == 'admin':
         t1, t2, t3, t4 = st.tabs(["Analytics", "Translations", "Users", "Health"])
         
         with t1:
             if HAS_PLOTLY:
-                data = sb.table("jobs").select("revenue, status").execute().data
-                if data: st.plotly_chart(px.pie(pd.DataFrame(data), values='revenue', names='status', title="Revenue Split"))
+                d = sb.table("jobs").select("revenue, status").execute().data
+                if d: st.plotly_chart(px.pie(pd.DataFrame(d), values='revenue', names='status'))
         
         with t2:
             tr = sb.table("translations").select("*").execute().data
@@ -151,29 +136,28 @@ def render_app():
                 sk = st.selectbox("Key", [i['key'] for i in tr])
                 curr = next(i for i in tr if i['key'] == sk)
                 with st.form("tr_edit"):
-                    updates, cols = {}, st.columns(2)
+                    upd, cols = {}, st.columns(2)
                     for i, (code, name) in enumerate(LANGUAGES.items()):
-                        updates[code] = cols[i%2].text_input(name, value=curr.get(code, ""))
+                        upd[code] = cols[i%2].text_input(name, value=curr.get(code, ""))
                     if st.form_submit_button("Save"):
-                        sb.table("translations").update(updates).eq("key", sk).execute(); st.rerun()
+                        sb.table("translations").update(upd).eq("key", sk).execute(); st.rerun()
 
         with t3:
-            users = sb.table("profiles").select("*").execute().data
-            if users:
-                df_u = pd.DataFrame(users)
+            u = sb.table("profiles").select("*").execute().data
+            if u:
+                df_u = pd.DataFrame(u)
                 st.dataframe(df_u[['id', 'role', 'is_premium']], use_container_width=True)
                 uid = st.text_input("User ID")
-                new_r = st.selectbox("New Role", ["driver", "dispatch", "admin"])
+                new_r = st.selectbox("Role", ["driver", "dispatch", "admin"])
                 if st.button("Update"):
                     sb.table("profiles").update({"role": new_r}).eq("id", uid).execute(); st.rerun()
 
         with t4:
-            if st.button("Run Diagnostic"):
+            if st.button("Diagnostic"):
                 try:
                     res = sb.table("jobs").select("*").limit(1).execute()
-                    st.success("Connected!")
-                    st.write("Columns detected:", list(res.data[0].keys()) if res.data else "No rows found")
-                except Exception as e: st.error(f"Diagnostic Failed: {e}")
+                    st.success(f"Connected! Cols: {list(res.data[0].keys()) if res.data else 'Empty'}")
+                except Exception as e: st.error(f"Failed: {e}")
 
 def main():
     load_translations(sb)
