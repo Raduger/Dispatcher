@@ -1,94 +1,104 @@
 import streamlit as st
-import stripe
 import os
 import sys
-import pandas as pd
-from supabase import create_client
-from dotenv import load_dotenv
 
-# --- DISCOVERY ---
-current_dir = os.path.dirname(os.path.abspath(__file__))
-root_path = os.path.abspath(os.path.join(current_dir, ".."))
-if root_path not in sys.path: sys.path.insert(0, root_path)
+# --- 1. CRITICAL: MUST BE FIRST STREAMLIT COMMAND ---
+st.set_page_config(page_title="ProDispatcher", layout="wide")
 
+# --- 2. SAFE IMPORTS & DISCOVERY ---
 try:
-    from utils.translations import LANGUAGES, translate, load_translations
-except:
-    from translations import LANGUAGES, translate, load_translations
+    import stripe
+    import pandas as pd
+    from supabase import create_client
+    from dotenv import load_dotenv
+    
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    root_path = os.path.abspath(os.path.join(current_dir, ".."))
+    if root_path not in sys.path: sys.path.insert(0, root_path)
+    
+    try:
+        from utils.translations import LANGUAGES, translate, load_translations
+    except:
+        from translations import LANGUAGES, translate, load_translations
+except Exception as e:
+    st.error(f"Failed to load libraries: {e}")
+    st.stop()
 
+# --- 3. SAFE INITIALIZATION ---
 load_dotenv()
-sb = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
+S_URL = os.getenv("SUPABASE_URL")
+S_KEY = os.getenv("SUPABASE_KEY")
+
+if not S_URL or not S_KEY:
+    st.error("Missing SUPABASE_URL or SUPABASE_KEY in Secrets/Environment.")
+    st.stop()
+
+sb = create_client(S_URL, S_KEY)
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 PRICE_ID = os.getenv("STRIPE_PRICE_ID")
 
-def sync_profile(user):
-    """Detects missing profiles and repairs them instantly."""
-    res = sb.table("profiles").select("*").eq("id", user.id).execute()
-    if not res.data:
-        # Check if first user to assign admin role
-        count = sb.table("profiles").select("id", count="exact").limit(1).execute().count
-        role = "admin" if count == 0 else "driver"
-        new_prof = {"id": user.id, "role": role, "is_premium": False}
-        sb.table("profiles").insert(new_prof).execute()
-        return new_prof
-    return res.data[0]
+def sync_profile(user_id):
+    """Ensures a profile row exists or creates one (First user = Admin)."""
+    try:
+        res = sb.table("profiles").select("*").eq("id", user_id).execute()
+        if not res.data:
+            count = sb.table("profiles").select("id", count="exact").limit(1).execute().count
+            role = "admin" if count == 0 else "driver"
+            sb.table("profiles").insert({"id": user_id, "role": role}).execute()
+            st.rerun()
+        return res.data[0]
+    except Exception as e:
+        st.error(f"Database Sync Error: {e}")
+        return {"role": "driver", "is_premium": False}
 
 def render_app():
-    user, lang = st.session_state.user, st.session_state.lang
-    prof = sync_profile(user) # Auto-repair trigger
+    user = st.session_state.user
+    lang = st.session_state.get('lang', 'en')
+    prof = sync_profile(user.id)
     
-    role, is_p = prof.get('role', 'driver'), prof.get('is_premium', False)
+    role = prof.get('role', 'driver')
+    is_p = prof.get('is_premium', False)
 
-    # Sync Premium after payment
-    if st.query_params.get("success") == "true":
-        sb.table("profiles").update({"is_premium": True}).eq("id", user.id).execute()
-        st.query_params.clear(); st.rerun()
-
+    # Sidebar
     st.sidebar.title("🚚 ProDispatcher")
-    st.sidebar.write(f"Role: **{role.upper()}**")
-    menu = st.sidebar.radio("Nav", ["Dashboard", "Earnings", "Premium", "Admin"])
+    st.sidebar.write(f"Logged in: **{role.upper()}**")
+    
+    menu = st.sidebar.radio("Navigation", ["Dashboard", "Earnings", "Premium", "Admin"])
+    
+    if st.sidebar.button("Logout"):
+        st.session_state.clear()
+        st.rerun()
 
-    if menu == "Premium":
-        st.header("👑 Premium Subscription")
-        if is_p: 
-            st.success("You are a Premium Member!")
-        else:
-            st.write("Upgrade to boost your loads to the top of the list.")
-            if st.button("Subscribe - $29/mo"):
-                try:
-                    sess = stripe.checkout.Session.create(
-                        payment_method_types=['card'],
-                        line_items=[{'price': PRICE_ID, 'quantity': 1}],
-                        mode='subscription',
-                        success_url="https://pro-dispatcher.streamlit.app/?success=true",
-                        cancel_url="https://pro-dispatcher.streamlit.app/",
-                    )
-                    st.link_button("Pay Now", sess.url)
-                except Exception as e: st.error(f"Stripe Error: {e}")
-
+    # Content
+    if menu == "Dashboard":
+        st.header("Job Board")
+        st.write("Welcome to the control center.")
+        # [Dashboard Logic...]
+        
     elif menu == "Admin":
         if role == 'admin':
-            t1, t2 = st.tabs(["Manage System", "Diagnostic"])
-            with t1:
-                st.subheader("Language Editor")
-                # Translation logic remains same
-            with t2:
-                # Refined Diagnostic logic
-                st.write("Checking API Keys...")
-                st.write(f"Supabase URL: {'✅' if os.getenv('SUPABASE_URL') else '❌'}")
+            st.header("🛡️ System Admin")
+            # [Admin Health Logic...]
         else:
-            st.warning("🚫 Admin access required. Contact support to change your role.")
-
-    if st.sidebar.button("Logout"):
-        st.session_state.clear(); st.rerun()
+            st.warning("Admin Access Required.")
 
 def main():
-    st.set_page_config(page_title="ProDispatcher", layout="wide")
-    load_translations(sb)
-    if 'lang' not in st.session_state: st.session_state.lang = 'en'
-    if 'user' not in st.session_state:
-        # Login UI...
-        pass
-    else: render_app()
+    try:
+        load_translations(sb)
+    except: pass
 
-if __name__ == "__main__": main()
+    if 'user' not in st.session_state:
+        st.title("ProDispatcher Login")
+        em = st.text_input("Email")
+        pw = st.text_input("Password", type="password")
+        if st.button("Login"):
+            try:
+                res = sb.auth.sign_in_with_password({"email": em, "password": pw})
+                st.session_state.user = res.user
+                st.rerun()
+            except Exception as e: st.error(f"Auth Error: {e}")
+    else:
+        render_app()
+
+if __name__ == "__main__":
+    main()
