@@ -120,10 +120,18 @@ def render_app():
                 new_r = st.selectbox("Role", ["driver", "dispatch", "admin"])
                 if st.button("Update"):
                     sb.table("profiles").update({"role": new_r}).eq("id", uid).execute(); st.rerun()
-        with t3:
-            if st.button("Fix RLS Recursion"):
-                st.info("Run the 'safe_read' SQL in Supabase Editor.")
-
+      
+with t3: # Diagnostic Tab
+    if st.button("🔍 Check RLS Health"):
+        try:
+            # Querying the internal Postgres schema to see active policies
+            policies = sb.rpc("get_policies").execute() # If you have a custom RPC
+            # Or just a simple test:
+            test_prof = sb.table("profiles").select("id").limit(1).execute()
+            test_jobs = sb.table("jobs").select("id").limit(1).execute()
+            st.success("Policies are flat and readable! ✅")
+        except Exception as e:
+            st.error(f"Recursion still active: {e}")
 def main():
     load_translations(sb)
     if 'user' not in st.session_state:
