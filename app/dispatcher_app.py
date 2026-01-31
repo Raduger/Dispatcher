@@ -34,8 +34,9 @@ def sync_profile(user_id):
     try:
         res = sb.table("profiles").select("*").eq("id", user_id).execute()
         if res.data: return res.data[0]
-        # Auto-create if missing
-        role = "admin" if sb.table("profiles").select("id", count="exact").limit(1).execute().count == 0 else "driver"
+        # Auto-create if missing (First user = Admin)
+        count_res = sb.table("profiles").select("id", count="exact").limit(1).execute()
+        role = "admin" if count_res.count == 0 else "driver"
         p = {"id": user_id, "role": role, "is_premium": False}
         sb.table("profiles").insert(p).execute()
         return p
@@ -84,13 +85,14 @@ def render_app():
         try:
             # Active
             aj = sb.table("jobs").select("*").eq("driver_id", user.id).eq("status", "in_progress").execute().data
-            if aj: st.subheader("🛠️ Active")
-            for a in (aj or []):
-                with st.container(border=True):
-                    c1, c2 = st.columns([2, 1])
-                    c1.write(f"**{a['title']}** (${a['revenue']})")
-                    f = c2.file_uploader("BOL", key=f"f{a['id']}")
-                    if f and c2.button("Finish", key=f"b{a['id']}"): handle_upload(a['id'], f, user.id)
+            if aj: 
+                st.subheader("🛠️ Active")
+                for a in aj:
+                    with st.container(border=True):
+                        c1, c2 = st.columns([2, 1])
+                        c1.write(f"**{a['title']}** (${a['revenue']})")
+                        f = c2.file_uploader("BOL", key=f"f{a['id']}")
+                        if f and c2.button("Finish", key=f"b{a['id']}"): handle_upload(a['id'], f, user.id)
             
             # Board
             st.subheader("🌍 Open Loads")
@@ -104,6 +106,29 @@ def render_app():
                         sb.table("jobs").update({"driver_id": user.id, "status": "in_progress"}).eq("id", b['id']).execute()
                         st.rerun()
         except Exception as e: st.error(f"Data Error: {e}")
+
+    elif menu == "Earnings":
+        st.header(translate('earnings', lang))
+        try:
+            ej = sb.table("jobs").select("*").eq("driver_id", user.id).execute().data
+            if ej:
+                df = pd.DataFrame(ej)
+                st.metric("Total Paid", f"${df[df['status']=='completed']['revenue'].sum():,.2f}")
+                st.dataframe(df[['title', 'revenue', 'status']], use_container_width=True)
+        except: st.info("No earnings yet.")
+
+    elif menu == "Premium":
+        if is_p: st.success("Premium Active 👑")
+        else:
+            if st.button("Subscribe - $29/mo"):
+                try:
+                    s = stripe.checkout.Session.create(
+                        payment_method_types=['card'], line_items=[{'price': PRICE_ID, 'quantity': 1}],
+                        mode='subscription', success_url="https://pro-dispatcher.streamlit.app/?success=true",
+                        cancel_url="https://pro-dispatcher.streamlit.app/",
+                    )
+                    st.link_button("Pay Now", s.url)
+                except Exception as e: st.error(f"Stripe: {e}")
 
     elif menu == "Admin" and role == 'admin':
         t1, t2, t3 = st.tabs(["Stats", "Users", "Tools"])
@@ -120,18 +145,15 @@ def render_app():
                 new_r = st.selectbox("Role", ["driver", "dispatch", "admin"])
                 if st.button("Update"):
                     sb.table("profiles").update({"role": new_r}).eq("id", uid).execute(); st.rerun()
-      
-with t3: # Diagnostic Tab
-    if st.button("🔍 Check RLS Health"):
-        try:
-            # Querying the internal Postgres schema to see active policies
-            policies = sb.rpc("get_policies").execute() # If you have a custom RPC
-            # Or just a simple test:
-            test_prof = sb.table("profiles").select("id").limit(1).execute()
-            test_jobs = sb.table("jobs").select("id").limit(1).execute()
-            st.success("Policies are flat and readable! ✅")
-        except Exception as e:
-            st.error(f"Recursion still active: {e}")
+        with t3: # Diagnostic Tab
+            if st.button("🔍 Check RLS Health"):
+                try:
+                    sb.table("profiles").select("id").limit(1).execute()
+                    sb.table("jobs").select("id").limit(1).execute()
+                    st.success("Policies are flat and readable! ✅")
+                except Exception as e:
+                    st.error(f"Recursion still active: {e}")
+
 def main():
     load_translations(sb)
     if 'user' not in st.session_state:
