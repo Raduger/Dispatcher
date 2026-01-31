@@ -1,0 +1,56 @@
+language,key,value
+en,login,Login
+en,job_title,Job Title
+en,claim,Claim Job
+en,earnings,Total Earnings
+en,post,Post Job
+sw,login,Ingia
+sw,job_title,Kichwa cha Kazi
+sw,claim,Chukua Kazi
+sw,earnings,Jumla ya Mapato
+sw,post,Tuma Kazi
+de,login,Anmelden
+de,job_title,Jobtitel
+de,claim,Auftrag annehmen
+de,earnings,Gesamtverdienst
+de,post,Job posten
+it,login,Accedi
+it,job_title,Titolo di lavoro
+it,claim,Prendi lavoro
+it,earnings,Guadagni totali
+it,post,Pubblica lavoro
+fr,login,Connexion
+fr,job_title,Titre du poste
+fr,claim,Accepter la mission
+fr,earnings,Gains totaux
+fr,post,Publier
+pt,login,Entrar
+pt,job_title,Título do Trabalho
+pt,claim,Aceitar Trabalho
+pt,earnings,Ganhos Totais
+pt,post,Postar Trabalho
+es,login,Iniciar sesión
+es,job_title,Título del trabajo
+es,claim,Reclamar
+es,earnings,Ganancias totales
+es,post,Publicar
+nl,login,Inloggen
+nl,job_title,Jobtitel
+nl,claim,Klus claimen
+nl,earnings,Totale verdiensten
+nl,post,Plaatsen
+ru,login,Войти
+ru,job_title,Название работы
+ru,claim,Взять заказ
+ru,earnings,Общий заработок
+ru,post,Опубликовать
+uk,login,Увійти
+uk,uk_job_title,Назва роботи
+uk,claim,Взяти замовлення
+uk,earnings,Загальний заробіток
+uk,post,Опублікувати
+tr,login,Giriş Yap
+tr,job_title,İş Başlığı
+tr,claim,İşi Al
+tr,earnings,Toplam Kazanç
+tr,post,İş Yayınla
