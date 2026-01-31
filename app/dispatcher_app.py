@@ -59,7 +59,6 @@ def render_app():
     prof = sync_profile(user.id)
     role, is_p = prof.get('role', 'driver'), prof.get('is_premium', False)
 
-    # Sync Premium Status after payment
     if st.query_params.get("success") == "true":
         sb.table("profiles").update({"is_premium": True}).eq("id", user.id).execute()
         st.query_params.clear(); st.rerun()
@@ -69,7 +68,6 @@ def render_app():
     st.sidebar.write(f"Role: **{role.upper()}** {'👑' if is_p else ''}")
     menu = st.sidebar.radio("Nav", ["Dashboard", "Earnings", "Premium", "Admin"])
     
-    # Language Selector
     l_name = st.sidebar.selectbox("Language", list(LANGUAGES.values()), index=list(LANGUAGES.keys()).index(lang))
     st.session_state.lang = [k for k, v in LANGUAGES.items() if v == l_name][0]
     
@@ -91,20 +89,21 @@ def render_app():
         # ACTIVE TRIPS
         st.subheader("🛠️ Active Trips")
         try:
-            ajs = sb.table("jobs").select("*").eq("driver_id", user.id).eq("status", "in_progress").execute().data
-            for aj in (ajs or []):
+            aj_res = sb.table("jobs").select("*").eq("driver_id", user.id).eq("status", "in_progress").execute()
+            for aj in (aj_res.data or []):
                 with st.container(border=True):
                     c1, c2 = st.columns([2, 1])
                     c1.write(f"**{aj['title']}** (${aj['revenue']})")
                     f = c2.file_uploader("Upload BOL", key=f"f{aj['id']}")
                     if f and c2.button("Confirm Delivery", key=f"b{aj['id']}"): handle_upload(aj['id'], f, user.id)
-        except: st.error("Table Access Error")
+        except Exception as e:
+            st.error(f"Table Access Error (Active): {e}")
 
         # PUBLIC BOARD
         st.subheader("🌍 Open Loads")
         try:
-            jobs = sb.table("jobs").select("*").eq("status", "pending").execute().data
-            for j in (jobs or []):
+            jobs_res = sb.table("jobs").select("*").eq("status", "pending").execute()
+            for j in (jobs_res.data or []):
                 with st.container(border=True):
                     c1, c2, c3 = st.columns([3, 1, 1])
                     c1.write(f"{'🚀 ' if j.get('is_boosted') else ''}**{j['title']}**")
@@ -112,7 +111,8 @@ def render_app():
                     if role == 'driver' and c3.button("Claim", key=f"cl{j['id']}"):
                         sb.table("jobs").update({"driver_id": user.id, "status": "in_progress"}).eq("id", j['id']).execute()
                         st.rerun()
-        except: pass
+        except Exception as e:
+            st.error(f"Table Access Error (Board): {e}")
 
     elif menu == "Earnings":
         st.header(translate('earnings', lang))
@@ -140,39 +140,40 @@ def render_app():
     elif menu == "Admin" and role == 'admin':
         t1, t2, t3, t4 = st.tabs(["Analytics", "Translations", "Users", "Health"])
         
-        with t1: # PLOTLY CHARTS
+        with t1:
             if HAS_PLOTLY:
                 data = sb.table("jobs").select("revenue, status").execute().data
                 if data: st.plotly_chart(px.pie(pd.DataFrame(data), values='revenue', names='status', title="Revenue Split"))
         
-        with t2: # 11-LANGUAGE EDITOR
+        with t2:
             tr = sb.table("translations").select("*").execute().data
             if tr:
-                sk = st.selectbox("Select Key", [i['key'] for i in tr])
+                sk = st.selectbox("Key", [i['key'] for i in tr])
                 curr = next(i for i in tr if i['key'] == sk)
                 with st.form("tr_edit"):
                     updates, cols = {}, st.columns(2)
                     for i, (code, name) in enumerate(LANGUAGES.items()):
                         updates[code] = cols[i%2].text_input(name, value=curr.get(code, ""))
-                    if st.form_submit_button("Save Changes"):
+                    if st.form_submit_button("Save"):
                         sb.table("translations").update(updates).eq("key", sk).execute(); st.rerun()
 
-        with t3: # USER MANAGEMENT
+        with t3:
             users = sb.table("profiles").select("*").execute().data
             if users:
                 df_u = pd.DataFrame(users)
                 st.dataframe(df_u[['id', 'role', 'is_premium']], use_container_width=True)
-                uid = st.text_input("Target User ID")
-                new_r = st.selectbox("Role", ["driver", "dispatch", "admin"])
-                if st.button("Update User"):
+                uid = st.text_input("User ID")
+                new_r = st.selectbox("New Role", ["driver", "dispatch", "admin"])
+                if st.button("Update"):
                     sb.table("profiles").update({"role": new_r}).eq("id", uid).execute(); st.rerun()
 
-        with t4: # DIAGNOSTICS
-            if st.button("Check Database Integrity"):
+        with t4:
+            if st.button("Run Diagnostic"):
                 try:
-                    sb.table("jobs").select("*").limit(1).execute()
-                    st.success("Jobs Table: Accessible ✅")
-                except Exception as e: st.error(f"Error: {e}")
+                    res = sb.table("jobs").select("*").limit(1).execute()
+                    st.success("Connected!")
+                    st.write("Columns detected:", list(res.data[0].keys()) if res.data else "No rows found")
+                except Exception as e: st.error(f"Diagnostic Failed: {e}")
 
 def main():
     load_translations(sb)
