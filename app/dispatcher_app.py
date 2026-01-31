@@ -21,6 +21,7 @@ sb = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 PRICE_ID = os.getenv("STRIPE_PRICE_ID")
 
+# --- CORE FUNCTIONS ---
 def handle_upload(job_id, file, user_id):
     try:
         path = f"proofs/{user_id}/{job_id}_{file.name}"
@@ -31,30 +32,46 @@ def handle_upload(job_id, file, user_id):
         st.rerun()
     except Exception as e: st.error(f"Upload failed: {e}")
 
+def logout():
+    """Clears session and redirects to login."""
+    st.session_state.clear()
+    st.rerun()
+
+# --- APP UI ---
 def render_app():
     user, lang = st.session_state.user, st.session_state.lang
     
+    # Premium Redirect Sync
     if st.query_params.get("success") == "true":
         sb.table("profiles").update({"is_premium": True}).eq("id", user.id).execute()
         st.query_params.clear(); st.toast("Premium Active! 👑")
 
-    # --- FIXED: SAFE PROFILE FETCH ---
+    # Safe Profile Fetch
     try:
-        # Using .maybe_single() or limit(1) prevents the APIError if row is missing
         prof_res = sb.table("profiles").select("*").eq("id", user.id).execute()
         prof = prof_res.data[0] if prof_res.data else {}
         role = prof.get('role', 'driver')
         is_p = prof.get('is_premium', False)
-    except Exception as e:
+    except Exception:
         role, is_p = 'driver', False
-        st.sidebar.warning("Profile not initialized. Defaulting to Driver.")
+        st.sidebar.warning("Profile not synced.")
 
-    st.sidebar.write(f"Logged in as: **{role.upper()}** {'👑' if is_p else ''}")
+    # Sidebar Header & Navigation
+    st.sidebar.title("🚚 ProDispatcher")
+    st.sidebar.write(f"User: **{user.email}**")
+    st.sidebar.write(f"Role: **{role.upper()}** {'👑' if is_p else ''}")
+    
     menu = st.sidebar.radio("Navigation", ["Dashboard", "Earnings", "Premium", "Admin"])
+
+    # Sidebar Logout Button (Positioned at bottom)
+    st.sidebar.divider()
+    if st.sidebar.button("Logout / Toka"):
+        logout()
 
     if menu == "Dashboard":
         st.header(translate('job_title', lang))
         
+        # Dispatcher View: Post Job
         if role in ['dispatch', 'admin']:
             with st.expander("➕ Post New Load"):
                 t = st.text_input("Job Description")
@@ -63,6 +80,7 @@ def render_app():
                     sb.table("jobs").insert({"title": t, "revenue": r, "user_id": user.id, "status": "pending"}).execute()
                     st.success("Posted!"); st.rerun()
 
+        # Driver View: Active Jobs
         if role == 'driver':
             st.subheader("🛠️ My Active Jobs")
             ajs = sb.table("jobs").select("*").eq("driver_id", user.id).eq("status", "in_progress").execute().data
@@ -75,6 +93,7 @@ def render_app():
                     if up_file and c2.button("Complete", key=f"fin_{aj['id']}"):
                         handle_upload(aj['id'], up_file, user.id)
 
+        # Global Job Board
         st.subheader("🌍 Available Loads")
         jobs_res = sb.table("jobs").select("*").eq("status", "pending").order("is_boosted", desc=True).execute()
         jobs = jobs_res.data if jobs_res.data else []
@@ -138,14 +157,16 @@ def render_app():
 def main():
     st.set_page_config(page_title="ProDispatcher", layout="wide")
     load_translations(sb)
+    
     if 'lang' not in st.session_state: st.session_state.lang = 'en'
-    l_name = st.sidebar.selectbox("Language", list(LANGUAGES.values()))
+    l_name = st.sidebar.selectbox("Language / Lugha", list(LANGUAGES.values()))
     st.session_state.lang = [k for k, v in LANGUAGES.items() if v == l_name][0]
 
     if 'user' not in st.session_state:
         t1, t2 = st.tabs(["Login", "Sign Up"])
         with t1:
-            em, pw = st.text_input("Email"), st.text_input("Password", type="password")
+            em = st.text_input("Email", key="login_email")
+            pw = st.text_input("Password", type="password", key="login_pw")
             if st.button("Login"):
                 try:
                     res = sb.auth.sign_in_with_password({"email": em, "password": pw})
@@ -153,12 +174,15 @@ def main():
                     st.rerun()
                 except Exception as e: st.error(f"Login failed: {e}")
         with t2:
-            nem, npw = st.text_input("New Email"), st.text_input("New Password", type="password")
+            nem = st.text_input("New Email", key="reg_email")
+            npw = st.text_input("New Password", type="password", key="reg_pw")
             if st.button("Register"):
                 try:
                     sb.auth.sign_up({"email": nem, "password": npw})
-                    st.success("Check your email!")
+                    st.success("Check your email for verification!")
                 except Exception as e: st.error(f"Signup failed: {e}")
-    else: render_app()
+    else:
+        render_app()
 
-if __name__ == "__main__": main()
+if __name__ == "__main__":
+    main()
