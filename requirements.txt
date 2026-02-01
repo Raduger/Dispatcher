@@ -1,0 +1,4 @@
+streamlit==1.29.0
+supabase-py==2.3.0
+stripe==8.0.0
+python-dotenv==1.0.0
