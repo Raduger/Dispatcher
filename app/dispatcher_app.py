@@ -36,7 +36,12 @@ st.session_state.setdefault("role", None)
 st.session_state.setdefault("language", "en")
 st.session_state.setdefault("translations", load_translations("en"))
 
-t = st.session_state.translations
+translations = st.session_state.translations
+
+# Helper for safe translation
+def t(key: str):
+    lang = st.session_state.language
+    return translations.get(lang, {}).get(key) or translations.get("en", {}).get(key) or key
 
 # ────────────────────────────────────────────────
 # QUERY PARAM HELPERS
@@ -51,14 +56,14 @@ def clear_query_params():
         st.experimental_set_query_params({})
 
 # ────────────────────────────────────────────────
-# SIDEBAR (SINGLE, SAFE)
+# SIDEBAR
 # ────────────────────────────────────────────────
 with st.sidebar:
-    st.title(t.get("select_language", "Language"))
+    st.title(t("select_language"))
 
     languages = ["en", "sw", "de", "it", "fr", "pt", "es", "nl", "ru", "uk", "tr"]
     lang = st.selectbox(
-        t.get("select_language", "Choose language"),
+        t("select_language"),
         languages,
         index=languages.index(st.session_state.language)
     )
@@ -70,14 +75,10 @@ with st.sidebar:
 
     if st.session_state.user and st.session_state.role:
         st.divider()
-        st.caption(f"{t.get('user_label','User')}: {st.session_state.user.email}")
-        st.caption(
-            f"{t.get('role_label','Role')}: "
-            f"**{t.get(f'role_{st.session_state.role}', st.session_state.role.upper())}**"
-        )
-
+        st.caption(f"{t('user_label')}: {st.session_state.user.email}")
+        st.caption(f"{t('role_label')}: **{t(f'role_{st.session_state.role}') or st.session_state.role.upper()}**")
         st.divider()
-        if st.button(t.get("logout", "Logout")):
+        if st.button(t("logout")):
             supabase.auth.sign_out()
             st.session_state.clear()
             st.rerun()
@@ -86,49 +87,32 @@ with st.sidebar:
 # AUTH (LOGIN / SIGNUP)
 # ────────────────────────────────────────────────
 if not st.session_state.user:
-    tab1, tab2 = st.tabs([t.get("sign_in","Sign In"), t.get("sign_up","Sign Up")])
+    tab1, tab2 = st.tabs([t("sign_in"), t("sign_up")])
 
     with tab1:
-        email = st.text_input(t.get("email","Email"))
-        password = st.text_input(t.get("password","Password"), type="password")
-
-        if st.button(t.get("sign_in","Sign In"), type="primary"):
+        email = st.text_input(t("email"))
+        password = st.text_input(t("password"), type="password")
+        if st.button(t("sign_in"), type="primary"):
             try:
-                res = supabase.auth.sign_in_with_password({
-                    "email": email,
-                    "password": password
-                })
+                res = supabase.auth.sign_in_with_password({"email": email, "password": password})
                 if res.user:
                     st.session_state.user = res.user
-                    role = get_user_role(supabase, res.user.id)
-                    st.session_state.role = role
+                    st.session_state.role = get_user_role(supabase, res.user.id)
                     st.rerun()
             except Exception as e:
                 st.error(str(e))
 
     with tab2:
-        email = st.text_input(t.get("email","Email"), key="su_email")
-        password = st.text_input(t.get("password","Password"), type="password", key="su_pw")
-
+        email = st.text_input(t("email"), key="su_email")
+        password = st.text_input(t("password"), type="password", key="su_pw")
         role_display = st.selectbox(
-            t.get("select_role","Select role"),
-            [t.get("role_driver","Driver"),
-             t.get("role_dispatch","Dispatch"),
-             t.get("role_admin","Admin")]
+            t("select_role"),
+            [t("role_driver"), t("role_dispatch"), t("role_admin")]
         )
-
-        role_map = {
-            t.get("role_driver","Driver"): "driver",
-            t.get("role_dispatch","Dispatch"): "dispatch",
-            t.get("role_admin","Admin"): "admin"
-        }
-
-        if st.button(t.get("sign_up","Sign Up"), type="primary"):
+        role_map = {t("role_driver"): "driver", t("role_dispatch"): "dispatch", t("role_admin"): "admin"}
+        if st.button(t("sign_up"), type="primary"):
             try:
-                res = supabase.auth.sign_up({
-                    "email": email,
-                    "password": password
-                })
+                res = supabase.auth.sign_up({"email": email, "password": password})
                 if res.user:
                     role = role_map[role_display]
                     create_profile(supabase, res.user.id, email, role)
@@ -139,84 +123,76 @@ if not st.session_state.user:
                 st.error(str(e))
 
 # ────────────────────────────────────────────────
-# DASHBOARD (LOGGED IN)
+# DASHBOARD
 # ────────────────────────────────────────────────
 if st.session_state.user and st.session_state.role:
-    role = st.session_state.role
     user_id = st.session_state.user.id
+    role = st.session_state.role
 
-    nav = {t.get("dashboard","Dashboard"): "dashboard"}
-    if role in ["driver","dispatch"]:
-        nav[t.get("earnings","Earnings")] = "earnings"
+    nav = {t("dashboard"): "dashboard"}
+    if role in ["driver", "dispatch"]:
+        nav[t("earnings")] = "earnings"
     if role == "admin":
-        nav[t.get("admin_panel","Admin Panel")] = "admin"
+        nav[t("admin_panel")] = "admin"
 
-    page = st.selectbox(t.get("navigation_menu","Go to"), list(nav.keys()))
+    page = st.selectbox(t("navigation_menu"), list(nav.keys()))
     page = nav[page]
 
+    # Dashboard Page
     if page == "dashboard":
-        st.title(t.get("dashboard","Dashboard"))
+        st.title(t("dashboard"))
 
-        if role in ["dispatch","admin"]:
-            with st.expander(t.get("create_job","Create Job")):
-                title = st.text_input(t.get("title","Title"))
-                expense = st.number_input(t.get("expense","Expense"), min_value=0.0)
-                revenue = st.number_input(t.get("revenue","Revenue"), min_value=0.0)
+        if role in ["dispatch", "admin"]:
+            with st.expander(t("create_job")):
+                title = st.text_input(t("title"))
+                expense = st.number_input(t("expense"), min_value=0.0)
+                revenue = st.number_input(t("revenue"), min_value=0.0)
 
                 drivers = supabase.table("profiles").select("*").eq("role","driver").execute().data or []
                 options = ["None"] + [f"{d['email']}|{d['id']}" for d in drivers]
-                selected = st.selectbox(t.get("assign_to_driver","Assign Driver"), options)
-
+                selected = st.selectbox(t("assign_to_driver","Assign Driver"), options)
                 assigned_to = None if selected == "None" else selected.split("|")[1]
 
-                if st.button(t.get("create_job","Create Job")):
-                    create_job(
-                        supabase,
-                        title=title,
-                        created_by=user_id,
-                        expense=expense,
-                        revenue=revenue,
-                        assigned_to=assigned_to
-                    )
-                    st.success(t.get("job_created","Job created"))
+                if st.button(t("create_job")):
+                    create_job(supabase, title=title, created_by=user_id, expense=expense, revenue=revenue, assigned_to=assigned_to)
+                    st.success(t("job_created"))
                     st.rerun()
 
-        st.subheader(t.get("your_jobs","Your Jobs"))
-        if role == "driver":
-            jobs = supabase.table("jobs").select("*").eq("assigned_to", user_id).execute().data
-        else:
-            jobs = supabase.table("jobs").select("*").execute().data
-
+        st.subheader(t("your_jobs"))
+        jobs = supabase.table("jobs").select("*").eq("assigned_to" if role=="driver" else "id", user_id if role=="driver" else None).execute().data or []
         if jobs:
             for job in jobs:
                 st.markdown(f"- **{job['title']}** | {job.get('revenue',0)}")
         else:
-            st.info(t.get("no_jobs","No jobs"))
+            st.info(t("no_jobs"))
 
-    if page == "earnings":
-        st.title(t.get("earnings","Earnings"))
+    # Earnings Page
+    if page == "earnings" and role in ["driver", "dispatch"]:
+        st.title(t("earnings"))
         total = calculate_earnings(supabase, user_id)
-        st.metric(t.get("total_earnings","Total"), f"${total:.2f}")
+        st.metric(t("total_earnings"), f"${total:.2f}")
 
-    if page == "admin":
-        st.title(t.get("admin_panel","Admin Panel"))
+    # Admin Page
+    if page == "admin" and role=="admin":
+        st.title(t("admin_panel"))
+        st.info(t("admin_info"))
 
 # ────────────────────────────────────────────────
 # STRIPE CALLBACK
 # ────────────────────────────────────────────────
 params = get_query_params()
-
 if "session_id" in params:
     try:
         session_id = params["session_id"]
         session = stripe.checkout.Session.retrieve(session_id)
         if session.payment_status == "paid":
-            st.success(t.get("payment_success","Payment successful"))
+            st.success(t("payment_success"))
+        else:
+            st.error(t("payment_failure"))
     except Exception as e:
         st.error(str(e))
     clear_query_params()
     st.rerun()
-
 elif "canceled" in params:
-    st.warning(t.get("payment_cancelled","Payment cancelled"))
+    st.warning(t("payment_cancelled"))
     clear_query_params()

@@ -1,38 +1,39 @@
+# utils/translations.py
 import csv
 import os
+from pathlib import Path
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-CSV_PATH = os.path.join(BASE_DIR, "translations.csv")
+# Path to translations CSV
+TRANSLATION_FILE = Path(__file__).parent / "translations.csv"
 
+def _validate_csv(path):
+    """Ensure CSV has exactly 3 columns per row."""
+    with open(path, newline="", encoding="utf-8") as f:
+        reader = csv.reader(f)
+        for i, row in enumerate(reader, start=1):
+            if len(row) != 3:
+                raise ValueError(
+                    f"CSV format error on line {i}: expected 3 columns (language,key,value), got {len(row)} → {row}"
+                )
 
-def load_translations(language: str) -> dict:
+def load_translations(default_language="en"):
     """
-    Load translations for a given language from CSV.
-    Falls back to English.
+    Load translations from CSV.
+    Returns a dictionary: translations[lang][key] = value
     """
+    if not TRANSLATION_FILE.exists():
+        raise FileNotFoundError(f"Translations CSV not found at {TRANSLATION_FILE}")
 
-    if not os.path.exists(CSV_PATH):
-        raise FileNotFoundError(
-            f"Translation file missing! Expected at: {CSV_PATH}"
-        )
+    _validate_csv(TRANSLATION_FILE)
 
     translations = {}
-    fallback = {}
+    with open(TRANSLATION_FILE, newline="", encoding="utf-8") as f:
+        reader = csv.reader(f, quotechar='"')
+        for language, key, value in reader:
+            translations.setdefault(language, {})[key] = value
 
-    with open(CSV_PATH, newline="", encoding="utf-8") as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            lang = row["language"].strip()
-            key = row["key"].strip()
-            value = row["value"].strip()
-
-            if lang == "en":
-                fallback[key] = value
-            if lang == language:
-                translations[key] = value
-
-    # fallback to English if key missing
-    for k, v in fallback.items():
-        translations.setdefault(k, v)
+    # Fallback to default language if key missing
+    def get_translation(lang, key):
+        return translations.get(lang, {}).get(key) or translations.get(default_language, {}).get(key) or key
 
     return translations

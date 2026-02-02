@@ -40,9 +40,9 @@ en,select_language,Select Language
 en,user_label,User
 en,role_label,Role
 en,navigation_menu,Go to
-en,welcome_driver,Welcome, Driver!
-en,welcome_dispatch,Welcome, Dispatcher!
-en,welcome_admin,Welcome, Admin!
+en,welcome_driver,"Welcome, Driver!"
+en,welcome_dispatch,"Welcome, Dispatcher!"
+en,welcome_admin,"Welcome, Admin!"
 en,your_jobs,Your Jobs
 en,no_jobs,No jobs yet.
 en,title_required,Title is required.
@@ -51,7 +51,9 @@ en,premium_info,Premium features coming soon.
 en,boosts_info,Boost boosts coming soon.
 en,admin_info,Admin controls will be added here.
 en,select_role,Select your role
-
+en,role_driver,DRIVER
+en,role_dispatch,DISPATCH
+en,role_admin,ADMIN
 sw,login,Ingia
 sw,email,Barua pepe
 sw,password,Neno la siri
@@ -93,9 +95,9 @@ sw,select_language,Chagua Lugha
 sw,user_label,Mtumiaji
 sw,role_label,Cheo
 sw,navigation_menu,Elekea
-sw,welcome_driver,Karibu, Dereva!
-sw,welcome_dispatch,Karibu, Msimamizi!
-sw,welcome_admin,Karibu, Admin!
+sw,welcome_driver,"Karibu, Dereva!"
+sw,welcome_dispatch,"Karibu, Msimamizi!"
+sw,welcome_admin,"Karibu, Admin!"
 sw,your_jobs,Kazi Zako
 sw,no_jobs,Hakuna kazi bado.
 sw,title_required,Kichwa kinahitajika.
@@ -104,7 +106,9 @@ sw,premium_info,Vipengele vya Premium viko karibu.
 sw,boosts_info,Nyongeza inakuja hivi karibuni.
 sw,admin_info,Dhibiti za Admin zitaongezwa hapa.
 sw,select_role,Chagua cheo chako
-
+sw,role_driver,DEREVA
+sw,role_dispatch,MSIMAMIZI
+sw,role_admin,ADMIN
 de,login,Anmelden
 de,email,E-Mail
 de,password,Passwort
@@ -146,9 +150,9 @@ de,select_language,Sprache auswählen
 de,user_label,Benutzer
 de,role_label,Rolle
 de,navigation_menu,Gehe zu
-de,welcome_driver,Willkommen, Fahrer!
-de,welcome_dispatch,Willkommen, Dispatcher!
-de,welcome_admin,Willkommen, Admin!
+de,welcome_driver,"Willkommen, Fahrer!"
+de,welcome_dispatch,"Willkommen, Dispatcher!"
+de,welcome_admin,"Willkommen, Admin!"
 de,your_jobs,Ihre Jobs
 de,no_jobs,Noch keine Jobs.
 de,title_required,Titel erforderlich.
@@ -157,7 +161,9 @@ de,premium_info,Premium-Funktionen kommen bald.
 de,boosts_info,Boosts kommen bald.
 de,admin_info,Admin-Steuerung wird hinzugefügt.
 de,select_role,Wählen Sie Ihre Rolle
-
+de,role_driver,FAHRER
+de,role_dispatch,DISPATCH
+de,role_admin,ADMIN
 it,login,Accedi
 it,email,Email
 it,password,Password
@@ -199,9 +205,9 @@ it,select_language,Seleziona Lingua
 it,user_label,Utente
 it,role_label,Ruolo
 it,navigation_menu,Vai a
-it,welcome_driver,Benvenuto, Autista!
-it,welcome_dispatch,Benvenuto, Dispatcher!
-it,welcome_admin,Benvenuto, Admin!
+it,welcome_driver,"Benvenuto, Autista!"
+it,welcome_dispatch,"Benvenuto, Dispatcher!"
+it,welcome_admin,"Benvenuto, Admin!"
 it,your_jobs,I Miei Lavori
 it,no_jobs,Nessun lavoro ancora.
 it,title_required,Il titolo è obbligatorio.
@@ -210,6 +216,9 @@ it,premium_info,Funzionalità Premium in arrivo.
 it,boosts_info,Boost in arrivo.
 it,admin_info,Controlli Admin verranno aggiunti.
 it,select_role,Seleziona il tuo ruolo
+it,role_driver,AUTISTA
+it,role_dispatch,DISPATCH
+it,role_admin,ADMIN
 fr,login,Connexion
 fr,email,Email
 fr,password,Mot de passe
@@ -251,9 +260,9 @@ fr,select_language,Choisir la langue
 fr,user_label,Utilisateur
 fr,role_label,Rôle
 fr,navigation_menu,Aller à
-fr,welcome_driver,Bienvenue, Conducteur !
-fr,welcome_dispatch,Bienvenue, Dispatcher !
-fr,welcome_admin,Bienvenue, Admin !
+fr,welcome_driver,"Bienvenue, Conducteur !"
+fr,welcome_dispatch,"Bienvenue, Dispatcher !"
+fr,welcome_admin,"Bienvenue, Admin !"
 fr,your_jobs,Vos Jobs
 fr,no_jobs,Aucun job pour l'instant.
 fr,title_required,Titre requis.
@@ -262,7 +271,9 @@ fr,premium_info,Fonctionnalités Premium à venir.
 fr,boosts_info,Boosts à venir.
 fr,admin_info,Contrôles Admin seront ajoutés.
 fr,select_role,Sélectionnez votre rôle
-
+fr,role_driver,CHAUFFEUR
+fr,role_dispatch,DISPATCH
+fr,role_admin,ADMIN
 pt,login,Entrar
 pt,email,Email
 pt,password,Senha
@@ -304,9 +315,9 @@ pt,select_language,Escolha o idioma
 pt,user_label,Usuário
 pt,role_label,Cargo
 pt,navigation_menu,Ir para
-pt,welcome_driver,Bem-vindo, Motorista!
-pt,welcome_dispatch,Bem-vindo, Dispatcher!
-pt,welcome_admin,Bem-vindo, Admin!
+pt,welcome_driver,"Bem-vindo, Motorista!"
+pt,welcome_dispatch,"Bem-vindo, Dispatcher!"
+pt,welcome_admin,"Bem-vindo, Admin!"
 pt,your_jobs,Seus Trabalhos
 pt,no_jobs,Nenhum trabalho ainda.
 pt,title_required,Título necessário.
@@ -315,7 +326,9 @@ pt,premium_info,Funcionalidades Premium em breve.
 pt,boosts_info,Impulsionamentos em breve.
 pt,admin_info,Controles Admin serão adicionados.
 pt,select_role,Selecione seu cargo
-
+pt,role_driver,MOTORISTA
+pt,role_dispatch,DISPATCH
+pt,role_admin,ADMIN
 es,login,Iniciar sesión
 es,email,Correo electrónico
 es,password,Contraseña
@@ -357,9 +370,9 @@ es,select_language,Seleccionar idioma
 es,user_label,Usuario
 es,role_label,Rol
 es,navigation_menu,Ir a
-es,welcome_driver,¡Bienvenido, Conductor!
-es,welcome_dispatch,¡Bienvenido, Dispatcher!
-es,welcome_admin,¡Bienvenido, Admin!
+es,welcome_driver,"¡Bienvenido, Conductor!"
+es,welcome_dispatch,"¡Bienvenido, Dispatcher!"
+es,welcome_admin,"¡Bienvenido, Admin!"
 es,your_jobs,Tus Trabajos
 es,no_jobs,Aún no hay trabajos.
 es,title_required,Se requiere título.
@@ -368,6 +381,9 @@ es,premium_info,Funciones Premium próximamente.
 es,boosts_info,Impulsos próximamente.
 es,admin_info,Controles Admin se agregarán.
 es,select_role,Selecciona tu rol
+es,role_driver,CONDUCTOR
+es,role_dispatch,DISPATCH
+es,role_admin,ADMIN
 tr,login,Giriş Yap
 tr,email,E-posta
 tr,password,Şifre
@@ -409,9 +425,9 @@ tr,select_language,Dil seç
 tr,user_label,Kullanıcı
 tr,role_label,Rol
 tr,navigation_menu,Git
-tr,welcome_driver,Hoş geldiniz, Sürücü!
-tr,welcome_dispatch,Hoş geldiniz, Dispatcher!
-tr,welcome_admin,Hoş geldiniz, Admin!
+tr,welcome_driver,"Hoş geldiniz, Sürücü!"
+tr,welcome_dispatch,"Hoş geldiniz, Dispatcher!"
+tr,welcome_admin,"Hoş geldiniz, Admin!"
 tr,your_jobs,İşleriniz
 tr,no_jobs,Henüz iş yok.
 tr,title_required,Başlık gerekli.
@@ -420,123 +436,171 @@ tr,premium_info,Premium özellikler yakında.
 tr,boosts_info,Boostlar yakında.
 tr,admin_info,Yönetici özellikleri eklenecek.
 tr,select_role,Rol seçin
-language,key,value
-en,select_language,Language
-en,navigation_menu,Go to
-en,user_label,User
-en,role_label,Role
-en,role_driver,DRIVER
-en,role_dispatch,DISPATCH
-en,role_admin,ADMIN
-en,dashboard,Dashboard
-en,your_jobs,Your Jobs
-en,no_jobs,No jobs
-en,logout,Logout
-
-de,select_language,Sprache
-de,navigation_menu,Gehe zu
-de,user_label,Benutzer
-de,role_label,Rolle
-de,role_driver,FAHRER
-de,role_dispatch,DISPATCH
-de,role_admin,ADMIN
-de,dashboard,Dashboard
-de,your_jobs,Ihre Aufträge
-de,no_jobs,Keine Aufträge
-de,logout,Abmelden
-
-fr,select_language,Langue
-fr,navigation_menu,Aller à
-fr,user_label,Utilisateur
-fr,role_label,Rôle
-fr,role_driver,CHAUFFEUR
-fr,role_dispatch,DISPATCH
-fr,role_admin,ADMIN
-fr,dashboard,Tableau de bord
-fr,your_jobs,Vos missions
-fr,no_jobs,Aucune mission
-fr,logout,Déconnexion
-
-it,select_language,Lingua
-it,navigation_menu,Vai a
-it,user_label,Utente
-it,role_label,Ruolo
-it,role_driver,AUTISTA
-it,role_dispatch,DISPATCH
-it,role_admin,ADMIN
-it,dashboard,Dashboard
-it,your_jobs,I tuoi lavori
-it,no_jobs,Nessun lavoro
-it,logout,Disconnetti
-
-es,select_language,Idioma
-es,navigation_menu,Ir a
-es,user_label,Usuario
-es,role_label,Rol
-es,role_driver,CONDUCTOR
-es,role_dispatch,DISPATCH
-es,role_admin,ADMIN
-es,dashboard,Panel
-es,your_jobs,Tus trabajos
-es,no_jobs,Sin trabajos
-es,logout,Cerrar sesión
-
-pt,select_language,Idioma
-pt,navigation_menu,Ir para
-pt,user_label,Usuário
-pt,role_label,Função
-pt,role_driver,MOTORISTA
-pt,role_dispatch,DISPATCH
-pt,role_admin,ADMIN
-pt,dashboard,Painel
-pt,your_jobs,Seus trabalhos
-pt,no_jobs,Sem trabalhos
-pt,logout,Sair
-
-nl,select_language,Taal
-nl,navigation_menu,Gaan naar
-nl,user_label,Gebruiker
-nl,role_label,Rol
-nl,role_driver,CHAUFFEUR
-nl,role_dispatch,DISPATCH
-nl,role_admin,ADMIN
-nl,dashboard,Dashboard
-nl,your_jobs,Jouw taken
-nl,no_jobs,Geen taken
-nl,logout,Uitloggen
-
-ru,select_language,Язык
-ru,navigation_menu,Перейти
-ru,user_label,Пользователь
-ru,role_label,Роль
-ru,role_driver,ВОДИТЕЛЬ
-ru,role_dispatch,ДИСПЕТЧЕР
-ru,role_admin,АДМИН
-ru,dashboard,Панель
-ru,your_jobs,Ваши задания
-ru,no_jobs,Нет заданий
-ru,logout,Выйти
-
-uk,select_language,Мова
-uk,navigation_menu,Перейти
-uk,user_label,Користувач
-uk,role_label,Роль
-uk,role_driver,ВОДІЙ
-uk,role_dispatch,ДИСПЕТЧЕР
-uk,role_admin,АДМІН
-uk,dashboard,Панель
-uk,your_jobs,Ваші роботи
-uk,no_jobs,Немає робіт
-uk,logout,Вийти
-
-tr,select_language,Dil
-tr,navigation_menu,Git
-tr,user_label,Kullanıcı
-tr,role_label,Rol
 tr,role_driver,SÜRÜCÜ
 tr,role_dispatch,DISPATCH
 tr,role_admin,ADMIN
-tr,dashboard,Kontrol Paneli
-tr,your_jobs,İşleriniz
-tr,no_jobs,İş yok
-tr,logout,Çıkış
+nl,login,Inloggen
+nl,email,E-mail
+nl,password,Wachtwoord
+nl,sign_up,Registreren
+nl,sign_in,Inloggen
+nl,logout,Uitloggen
+nl,dashboard,Dashboard
+nl,earnings,Inkomsten
+nl,boosts,Boosts
+nl,premium,Premium
+nl,admin_panel,Admin Paneel
+nl,create_job,Taak aanmaken
+nl,update_job,Taak bijwerken
+nl,title,Titel
+nl,expense,Kosten
+nl,revenue,Inkomsten
+nl,latitude,Breedtegraad
+nl,longitude,Lengtegraad
+nl,status,Status
+nl,pending,In afwachting
+nl,in_progress,Bezig
+nl,completed,Voltooid
+nl,claim,Taak claimen
+nl,mark_completed,Markeer als voltooid
+nl,total_earnings,Totaal inkomen
+nl,subscribe_premium,Abonneer op Premium
+nl,boost_job,Boost Taak
+nl,job_list,Taaklijst
+nl,assigned_jobs,Toegewezen taken
+nl,completed_jobs,Voltooide taken
+nl,clear_all_jobs,Verwijder alle taken
+nl,job_status_counts,Aantal taken per status
+nl,success,Succes
+nl,failure,Mislukt
+nl,payment_success,Betaling geslaagd
+nl,payment_failure,Betaling mislukt
+nl,payment_cancelled,Betaling geannuleerd
+nl,select_language,Taal
+nl,user_label,Gebruiker
+nl,role_label,Rol
+nl,navigation_menu,Gaan naar
+nl,welcome_driver,"Welkom, Chauffeur!"
+nl,welcome_dispatch,"Welkom, Dispatcher!"
+nl,welcome_admin,"Welkom, Admin!"
+nl,your_jobs,Jouw taken
+nl,no_jobs,Geen taken
+nl,title_required,Titel vereist
+nl,job_created,Taak aangemaakt!
+nl,premium_info,Premium functies komen eraan.
+nl,boosts_info,Boosts komen eraan.
+nl,admin_info,Admin besturing wordt toegevoegd.
+nl,select_role,Kies uw rol
+nl,role_driver,CHAUFFEUR
+nl,role_dispatch,DISPATCH
+nl,role_admin,ADMIN
+ru,login,Войти
+ru,email,Эл. почта
+ru,password,Пароль
+ru,sign_up,Регистрация
+ru,sign_in,Войти
+ru,logout,Выйти
+ru,dashboard,Панель
+ru,earnings,Заработок
+ru,boosts,Бусты
+ru,premium,Премиум
+ru,admin_panel,Панель Админ
+ru,create_job,Создать задание
+ru,update_job,Обновить задание
+ru,title,Название
+ru,expense,Расход
+ru,revenue,Доход
+ru,latitude,Широта
+ru,longitude,Долгота
+ru,status,Статус
+ru,pending,В ожидании
+ru,in_progress,В процессе
+ru,completed,Выполнено
+ru,claim,Принять задание
+ru,mark_completed,Отметить как выполнено
+ru,total_earnings,Общий доход
+ru,subscribe_premium,Подписка на Премиум
+ru,boost_job,Буст задания
+ru,job_list,Список заданий
+ru,assigned_jobs,Назначенные задания
+ru,completed_jobs,Выполненные задания
+ru,clear_all_jobs,Удалить все задания
+ru,job_status_counts,Количество заданий по статусу
+ru,success,Успех
+ru,failure,Неудача
+ru,payment_success,Платёж успешен
+ru,payment_failure,Платёж неудачен
+ru,payment_cancelled,Платёж отменён
+ru,select_language,Язык
+ru,user_label,Пользователь
+ru,role_label,Роль
+ru,navigation_menu,Перейти
+ru,welcome_driver,"Добро пожаловать, Водитель!"
+ru,welcome_dispatch,"Добро пожаловать, Диспетчер!"
+ru,welcome_admin,"Добро пожаловать, Админ!"
+ru,your_jobs,Ваши задания
+ru,no_jobs,Нет заданий
+ru,title_required,Требуется название
+ru,job_created,Задание создано!
+ru,premium_info,Функции Премиум скоро будут.
+ru,boosts_info,Бусты скоро будут.
+ru,admin_info,Управление Админ будет добавлено.
+ru,select_role,Выберите роль
+ru,role_driver,ВОДИТЕЛЬ
+ru,role_dispatch,ДИСПЕТЧЕР
+ru,role_admin,АДМИН
+uk,login,Увійти
+uk,email,Ел. пошта
+uk,password,Пароль
+uk,sign_up,Реєстрація
+uk,sign_in,Увійти
+uk,logout,Вийти
+uk,dashboard,Панель
+uk,earnings,Заробіток
+uk,boosts,Буст
+uk,premium,Преміум
+uk,admin_panel,Панель Адмін
+uk,create_job,Створити роботу
+uk,update_job,Оновити роботу
+uk,title,Назва
+uk,expense,Витрати
+uk,revenue,Дохід
+uk,latitude,Широта
+uk,longitude,Довгота
+uk,status,Статус
+uk,pending,Очікується
+uk,in_progress,В процесі
+uk,completed,Виконано
+uk,claim,Прийняти роботу
+uk,mark_completed,Позначити як виконано
+uk,total_earnings,Загальний дохід
+uk,subscribe_premium,Підписка на Преміум
+uk,boost_job,Буст роботи
+uk,job_list,Список робіт
+uk,assigned_jobs,Призначені роботи
+uk,completed_jobs,Виконані роботи
+uk,clear_all_jobs,Очистити всі роботи
+uk,job_status_counts,Кількість робіт по статусу
+uk,success,Успіх
+uk,failure,Невдача
+uk,payment_success,Платіж успішний
+uk,payment_failure,Платіж не вдалий
+uk,payment_cancelled,Платіж скасовано
+uk,select_language,Мова
+uk,user_label,Користувач
+uk,role_label,Роль
+uk,navigation_menu,Перейти
+uk,welcome_driver,"Ласкаво просимо, Водій!"
+uk,welcome_dispatch,"Ласкаво просимо, Диспетчер!"
+uk,welcome_admin,"Ласкаво просимо, Адмін!"
+uk,your_jobs,Ваші роботи
+uk,no_jobs,Немає робіт
+uk,title_required,Назва обов'язкова
+uk,job_created,Роботу створено!
+uk,premium_info,Функції Преміум скоро будуть.
+uk,boosts_info,Бусти скоро будуть.
+uk,admin_info,Управління Адмін буде додано.
+uk,select_role,Виберіть роль
+uk,role_driver,ВОДІЙ
+uk,role_dispatch,ДИСПЕТЧЕР
+uk,role_admin,АДМІН
