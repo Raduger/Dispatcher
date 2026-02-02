@@ -98,11 +98,15 @@ CREATE POLICY "Dispatch see own jobs" ON jobs FOR SELECT USING (
     EXISTS (SELECT 1 FROM profiles p WHERE p.id = auth.uid() AND p.role = 'dispatch')
 );
 
--- Admins full access to jobs
-CREATE POLICY "Admins full access to jobs" ON jobs USING (
-    EXISTS (SELECT 1 FROM profiles p WHERE p.id = auth.uid() AND p.role = 'admin')
-) WITH CHECK (
-    EXISTS (SELECT 1 FROM profiles p WHERE p.id = auth.uid() AND p.role = 'admin')
+-- Admins full access – using current user's role directly from auth context
+CREATE POLICY "Admins have full access to profiles"
+ON profiles
+FOR ALL
+USING (
+    (SELECT role FROM profiles WHERE id = auth.uid()) = 'admin'
+)
+WITH CHECK (
+    (SELECT role FROM profiles WHERE id = auth.uid()) = 'admin'
 );
 
 -- Payments RLS
