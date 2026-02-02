@@ -1,4 +1,11 @@
-from supabase import create_client
+try:
+    from supabase import create_client, Client
+except ImportError as e:
+    raise ImportError(
+        "Supabase client not installed. "
+        "Make sure 'supabase' is in requirements.txt"
+    ) from e
+
 import os
 
 # ────────────────────────────────────────────────
