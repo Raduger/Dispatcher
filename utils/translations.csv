@@ -1,0 +1,539 @@
+language,key,value
+# --- English (en) ---
+en,select_language,Choose language
+en,sign_in,Sign In
+en,sign_up,Sign Up
+en,email,Email
+en,password,Password
+en,logout,Logout
+en,user_label,User
+en,role_label,Role
+en,role_driver,Driver
+en,role_dispatch,Dispatch
+en,role_admin,Admin
+en,navigation_menu,Go to
+en,dashboard,Dashboard
+en,earnings,Earnings
+en,boosts,Boosts
+en,premium,Premium
+en,admin_panel,Admin Panel
+en,create_job,Create Job
+en,title,Title
+en,expense,Expense
+en,revenue,Revenue
+en,latitude,Latitude
+en,longitude,Longitude
+en,your_jobs,Your Jobs
+en,no_jobs,No jobs yet.
+en,title_required,Title is required.
+en,email_password_required,Email and password required.
+en,login_success,Login successful!
+en,signup_success,Account created! Check your email to confirm.
+en,login_failed,Login failed
+en,signup_failed,Signup failed
+en,user_role_missing,User role missing.
+en,profile_not_found,Profile not found. Please sign up.
+en,job_created,Job created!
+en,job_creation_failed,Failed to create job
+en,job_fetch_failed,Failed to fetch jobs
+en,total_earnings,Total Earnings
+en,premium_info,Premium features coming soon.
+en,boosts_info,Boost boosts coming soon.
+en,admin_info,Admin controls will be added here.
+en,payment_success,Payment successful!
+en,payment_failure,Payment failed.
+en,payment_cancelled,Payment cancelled.
+en,stripe_error,Stripe error
+en,welcome_driver,Welcome, Driver!
+en,welcome_dispatch,Welcome, Dispatcher!
+en,welcome_admin,Welcome, Admin!
+
+# --- Swahili (sw) ---
+sw,select_language,Chagua lugha
+sw,sign_in,Ingia
+sw,sign_up,Jisajili
+sw,email,Barua pepe
+sw,password,Neno la siri
+sw,logout,Toka
+sw,user_label,Mtumiaji
+sw,role_label,Nafasi
+sw,role_driver,Dereva
+sw,role_dispatch,Msimamizi
+sw,role_admin,Admin
+sw,navigation_menu,Nenda
+sw,dashboard,Dashibodi
+sw,earnings,Mapato
+sw,boosts,Nyongeza
+sw,premium,Premium
+sw,admin_panel,Paneli ya Admin
+sw,create_job,Unda Kazi
+sw,title,Kichwa
+sw,expense,Gharama
+sw,revenue,Mapato
+sw,latitude,Latitudo
+sw,longitude,Longitudo
+sw,your_jobs,Kazi Zako
+sw,no_jobs,Hakuna kazi bado.
+sw,title_required,Kichwa kinakohitajika.
+sw,email_password_required,Barua pepe na nenosiri vinahitajika.
+sw,login_success,Kuingia umefanikiwa!
+sw,signup_success,Akaunti imeundwa! Angalia barua pepe.
+sw,login_failed,Imeshindwa kuingia
+sw,signup_failed,Imeshindwa kusajili
+sw,user_role_missing,Jukumu la mtumiaji halipo.
+sw,profile_not_found,Wasifu haukupatikana.
+sw,job_created,Kazi imeundwa!
+sw,job_creation_failed,Imeshindwa kuunda kazi
+sw,job_fetch_failed,Imeshindwa kupata kazi
+sw,total_earnings,Mapato Yote
+sw,premium_info,Vipengele vya Premium karibuni.
+sw,boosts_info,Nyongeza karibuni.
+sw,admin_info,Dhibiti za admin zitaongezwa hapa.
+sw,payment_success,Malipo yamefanikiwa!
+sw,payment_failure,Malipo yameshindwa.
+sw,payment_cancelled,Malipo yametupwa.
+sw,stripe_error,Kosa la Stripe
+sw,welcome_driver,Karibu, Dereva!
+sw,welcome_dispatch,Karibu, Msimamizi!
+sw,welcome_admin,Karibu, Admin!
+
+# --- German (de) ---
+de,select_language,Sprache auswählen
+de,sign_in,Anmelden
+de,sign_up,Registrieren
+de,email,E-Mail
+de,password,Passwort
+de,logout,Abmelden
+de,user_label,Benutzer
+de,role_label,Rolle
+de,role_driver,Fahrer
+de,role_dispatch,Dispatcher
+de,role_admin,Admin
+de,navigation_menu,Gehe zu
+de,dashboard,Dashboard
+de,earnings,Einnahmen
+de,boosts,Boosts
+de,premium,Premium
+de,admin_panel,Admin Panel
+de,create_job,Job erstellen
+de,title,Titel
+de,expense,Ausgabe
+de,revenue,Einnahmen
+de,latitude,Breitengrad
+de,longitude,Längengrad
+de,your_jobs,Ihre Jobs
+de,no_jobs,Noch keine Jobs.
+de,title_required,Titel ist erforderlich.
+de,email_password_required,E-Mail und Passwort erforderlich.
+de,login_success,Anmeldung erfolgreich!
+de,signup_success,Konto erstellt! E-Mail prüfen.
+de,login_failed,Anmeldung fehlgeschlagen
+de,signup_failed,Registrierung fehlgeschlagen
+de,user_role_missing,Rolle fehlt.
+de,profile_not_found,Profil nicht gefunden.
+de,job_created,Job erstellt!
+de,job_creation_failed,Job konnte nicht erstellt werden
+de,job_fetch_failed,Jobs konnten nicht geladen werden
+de,total_earnings,Gesamteinnahmen
+de,premium_info,Premium-Funktionen bald verfügbar.
+de,boosts_info,Boost-Funktionen bald verfügbar.
+de,admin_info,Admin-Funktionen hier.
+de,payment_success,Zahlung erfolgreich!
+de,payment_failure,Zahlung fehlgeschlagen.
+de,payment_cancelled,Zahlung abgebrochen.
+de,stripe_error,Stripe Fehler
+de,welcome_driver,Willkommen, Fahrer!
+de,welcome_dispatch,Willkommen, Dispatcher!
+de,welcome_admin,Willkommen, Admin!
+
+# --- Italian (it) ---
+it,select_language,Scegli lingua
+it,sign_in,Accedi
+it,sign_up,Registrati
+it,email,Email
+it,password,Password
+it,logout,Esci
+it,user_label,Utente
+it,role_label,Ruolo
+it,role_driver,Autista
+it,role_dispatch,Dispatcher
+it,role_admin,Admin
+it,navigation_menu,Vai a
+it,dashboard,Dashboard
+it,earnings,Guadagni
+it,boosts,Boost
+it,premium,Premium
+it,admin_panel,Pannello Admin
+it,create_job,Crea lavoro
+it,title,Titolo
+it,expense,Spesa
+it,revenue,Ricavo
+it,latitude,Latitudine
+it,longitude,Longitudine
+it,your_jobs,I tuoi lavori
+it,no_jobs,Nessun lavoro.
+it,title_required,Titolo richiesto.
+it,email_password_required,Email e password richiesti.
+it,login_success,Accesso riuscito!
+it,signup_success,Account creato! Controlla la tua email.
+it,login_failed,Accesso fallito
+it,signup_failed,Registrazione fallita
+it,user_role_missing,Ruolo mancante.
+it,profile_not_found,Profilo non trovato.
+it,job_created,Lavoro creato!
+it,job_creation_failed,Creazione lavoro fallita
+it,job_fetch_failed,Impossibile caricare lavori
+it,total_earnings,Guadagni totali
+it,premium_info,Funzionalità Premium presto.
+it,boosts_info,Boost presto.
+it,admin_info,Controlli admin qui.
+it,payment_success,Pagamento riuscito!
+it,payment_failure,Pagamento fallito.
+it,payment_cancelled,Pagamento annullato.
+it,stripe_error,Errore Stripe
+it,welcome_driver,Benvenuto, Autista!
+it,welcome_dispatch,Benvenuto, Dispatcher!
+it,welcome_admin,Benvenuto, Admin!
+
+# --- French (fr) ---
+fr,select_language,Choisir la langue
+fr,sign_in,Se connecter
+fr,sign_up,S'inscrire
+fr,email,Email
+fr,password,Mot de passe
+fr,logout,Déconnexion
+fr,user_label,Utilisateur
+fr,role_label,Rôle
+fr,role_driver,Chauffeur
+fr,role_dispatch,Dispatcher
+fr,role_admin,Admin
+fr,navigation_menu,Aller à
+fr,dashboard,Tableau de bord
+fr,earnings,Gains
+fr,boosts,Boosts
+fr,premium,Premium
+fr,admin_panel,Panneau Admin
+fr,create_job,Créer travail
+fr,title,Titre
+fr,expense,Dépense
+fr,revenue,Revenu
+fr,latitude,Latitude
+fr,longitude,Longitude
+fr,your_jobs,Vos travaux
+fr,no_jobs,Aucun travail.
+fr,title_required,Titre requis.
+fr,email_password_required,Email et mot de passe requis.
+fr,login_success,Connexion réussie!
+fr,signup_success,Compte créé! Vérifiez votre email.
+fr,login_failed,Échec connexion
+fr,signup_failed,Échec inscription
+fr,user_role_missing,Rôle manquant.
+fr,profile_not_found,Profil introuvable.
+fr,job_created,Travail créé!
+fr,job_creation_failed,Échec création travail
+fr,job_fetch_failed,Impossible de charger travaux
+fr,total_earnings,Gains totaux
+fr,premium_info,Fonctions Premium bientôt.
+fr,boosts_info,Boost bientôt.
+fr,admin_info,Contrôles admin ici.
+fr,payment_success,Paiement réussi!
+fr,payment_failure,Paiement échoué.
+fr,payment_cancelled,Paiement annulé.
+fr,stripe_error,Erreur Stripe
+fr,welcome_driver,Bienvenue, Chauffeur!
+fr,welcome_dispatch,Bienvenue, Dispatcher!
+fr,welcome_admin,Bienvenue, Admin!
+
+# --- Portuguese (pt) ---
+pt,select_language,Escolher idioma
+pt,sign_in,Entrar
+pt,sign_up,Cadastrar
+pt,email,Email
+pt,password,Senha
+pt,logout,Sair
+pt,user_label,Usuário
+pt,role_label,Papel
+pt,role_driver,Motorista
+pt,role_dispatch,Despachante
+pt,role_admin,Admin
+pt,navigation_menu,Ir para
+pt,dashboard,Painel
+pt,earnings,Ganhos
+pt,boosts,Boosts
+pt,premium,Premium
+pt,admin_panel,Painel Admin
+pt,create_job,Criar trabalho
+pt,title,Título
+pt,expense,Despesa
+pt,revenue,Receita
+pt,latitude,Latitude
+pt,longitude,Longitude
+pt,your_jobs,Meus trabalhos
+pt,no_jobs,Nenhum trabalho.
+pt,title_required,Título necessário.
+pt,email_password_required,Email e senha necessários.
+pt,login_success,Login bem‑sucedido!
+pt,signup_success,Conta criada! Verifique seu email.
+pt,login_failed,Falha no login
+pt,signup_failed,Falha no cadastro
+pt,user_role_missing,Papel do usuário ausente.
+pt,profile_not_found,Perfil não encontrado.
+pt,job_created,Trabalho criado!
+pt,job_creation_failed,Falha ao criar trabalho
+pt,job_fetch_failed,Falha ao buscar trabalhos
+pt,total_earnings,Ganhos totais
+pt,premium_info,Funcionalidades Premium em breve.
+pt,boosts_info,Boosts em breve.
+pt,admin_info,Controles admin aqui.
+pt,payment_success,Pagamento bem‑sucedido!
+pt,payment_failure,Pagamento falhou.
+pt,payment_cancelled,Pagamento cancelado.
+pt,stripe_error,Erro Stripe
+pt,welcome_driver,Bem‑vindo, Motorista!
+pt,welcome_dispatch,Bem‑vindo, Despachante!
+pt,welcome_admin,Bem‑vindo, Admin!
+
+# --- Spanish (es) ---
+es,select_language,Seleccionar idioma
+es,sign_in,Iniciar sesión
+es,sign_up,Registrarse
+es,email,Correo electrónico
+es,password,Contraseña
+es,logout,Cerrar sesión
+es,user_label,Usuario
+es,role_label,Rol
+es,role_driver,Conductor
+es,role_dispatch,Despachador
+es,role_admin,Admin
+es,navigation_menu,Ir a
+es,dashboard,Tablero
+es,earnings,Ganancias
+es,boosts,Boosts
+es,premium,Premium
+es,admin_panel,Panel Admin
+es,create_job,Crear trabajo
+es,title,Título
+es,expense,Gasto
+es,revenue,Ingreso
+es,latitude,Latitud
+es,longitude,Longitud
+es,your_jobs,Mis trabajos
+es,no_jobs,Ningún trabajo.
+es,title_required,Título obligatorio.
+es,email_password_required,Correo y contraseña requeridos.
+es,login_success,Inicio sesión exitoso!
+es,signup_success,Cuenta creada! Revisa tu correo.
+es,login_failed,Error de inicio de sesión
+es,signup_failed,Error de registro
+es,user_role_missing,Rol faltante.
+es,profile_not_found,Perfil no encontrado.
+es,job_created,Trabajo creado!
+es,job_creation_failed,Error al crear trabajo
+es,job_fetch_failed,Error al obtener trabajos
+es,total_earnings,Ganancias totales
+es,premium_info,Funciones Premium pronto.
+es,boosts_info,Boosts pronto.
+es,admin_info,Controles admin aquí.
+es,payment_success,Pago exitoso!
+es,payment_failure,Pago fallido.
+es,payment_cancelled,Pago cancelado.
+es,stripe_error,Error Stripe
+es,welcome_driver,Bienvenido, Conductor!
+es,welcome_dispatch,Bienvenido, Despachador!
+es,welcome_admin,Bienvenido, Admin!
+
+# --- Dutch (nl) ---
+nl,select_language,Kies taal
+nl,sign_in,Inloggen
+nl,sign_up,Aanmelden
+nl,email,E-mailadres
+nl,password,Wachtwoord
+nl,logout,Uitloggen
+nl,user_label,Gebruiker
+nl,role_label,Rol
+nl,role_driver,Chauffeur
+nl,role_dispatch,Dispatcher
+nl,role_admin,Admin
+nl,navigation_menu,Gaan naar
+nl,dashboard,Dashboard
+nl,earnings,Inkomsten
+nl,boosts,Boosts
+nl,premium,Premium
+nl,admin_panel,Admin Panel
+nl,create_job,Job aanmaken
+nl,title,Titel
+nl,expense,Uitgave
+nl,revenue,Omzet
+nl,latitude,Breedtegraad
+nl,longitude,Lengtegraad
+nl,your_jobs,Mijn werkzaamheden
+nl,no_jobs,Geen werkzaamheden.
+nl,title_required,Titel vereist.
+nl,email_password_required,E-mail en wachtwoord vereist.
+nl,login_success,Inloggen gelukt!
+nl,signup_success,Account aangemaakt! Controleer je email.
+nl,login_failed,Inloggen mislukt
+nl,signup_failed,Aanmelding mislukt
+nl,user_role_missing,Rol ontbreekt.
+nl,profile_not_found,Profiel niet gevonden.
+nl,job_created,Job aangemaakt!
+nl,job_creation_failed,Fout bij job aanmaken
+nl,job_fetch_failed,Fout bij laden jobs
+nl,total_earnings,Totale inkomsten
+nl,premium_info,Premium functies binnenkort.
+nl,boosts_info,Boosts binnenkort.
+nl,admin_info,Admin controls hier.
+nl,payment_success,Betaling geslaagd!
+nl,payment_failure,Betaling mislukt.
+nl,payment_cancelled,Betaling geannuleerd.
+nl,stripe_error,Stripe fout
+nl,welcome_driver,Welkom, Chauffeur!
+nl,welcome_dispatch,Welkom, Dispatcher!
+nl,welcome_admin,Welkom, Admin!
+
+# --- Russian (ru) ---
+ru,select_language,Выберите язык
+ru,sign_in,Войти
+ru,sign_up,Зарегистрироваться
+ru,email,Электронная почта
+ru,password,Пароль
+ru,logout,Выйти
+ru,user_label,Пользователь
+ru,role_label,Роль
+ru,role_driver,Водитель
+ru,role_dispatch,Диспетчер
+ru,role_admin,Админ
+ru,navigation_menu,Перейти к
+ru,dashboard,Панель
+ru,earnings,Заработки
+ru,boosts,Бусти
+ru,premium,Премиум
+ru,admin_panel,Панель Admin
+ru,create_job,Создать работу
+ru,title,Название
+ru,expense,Расход
+ru,revenue,Доход
+ru,latitude,Широта
+ru,longitude,Долгота
+ru,your_jobs,Мои работы
+ru,no_jobs,Работ нет.
+ru,title_required,Требуется название.
+ru,email_password_required,Требуется email и пароль.
+ru,login_success,Вход выполнен!
+ru,signup_success,Аккаунт создан! Проверьте email.
+ru,login_failed,Ошибка входа
+ru,signup_failed,Ошибка регистрации
+ru,user_role_missing,Роль отсутствует.
+ru,profile_not_found,Профиль не найден.
+ru,job_created,Работа создана!
+ru,job_creation_failed,Ошибка создания работы
+ru,job_fetch_failed,Ошибка загрузки работ
+ru,total_earnings,Общий заработок
+ru,premium_info,Премиум скоро.
+ru,boosts_info,Бусти скоро.
+ru,admin_info,Admin здесь.
+ru,payment_success,Платёж успешен!
+ru,payment_failure,Платёж не удался.
+ru,payment_cancelled,Платёж отменён.
+ru,stripe_error,Ошибка Stripe
+ru,welcome_driver,Добро пожаловать, Водитель!
+ru,welcome_dispatch,Добро пожаловать, Диспетчер!
+ru,welcome_admin,Добро пожаловать, Admin!
+
+# --- Ukrainian (uk) ---
+uk,select_language,Оберіть мову
+uk,sign_in,Увійти
+uk,sign_up,Зареєструватися
+uk,email,Електронна пошта
+uk,password,Пароль
+uk,logout,Вийти
+uk,user_label,Користувач
+uk,role_label,Роль
+uk,role_driver,Водій
+uk,role_dispatch,Диспетчер
+uk,role_admin,Адмін
+uk,navigation_menu,Перейти до
+uk,dashboard,Панель
+uk,earnings,Заробітки
+uk,boosts,Бусти
+uk,premium,Преміум
+uk,admin_panel,Панель Admin
+uk,create_job,Створити роботу
+uk,title,Назва
+uk,expense,Витрата
+uk,revenue,Дохід
+uk,latitude,Широта
+uk,longitude,Довгота
+uk,your_jobs,Мої роботи
+uk,no_jobs,Роботи немає.
+uk,title_required,Потрібна назва.
+uk,email_password_required,Потрібні email і пароль.
+uk,login_success,Увійшли!
+uk,signup_success,Акаунт створено! Перевірте email.
+uk,login_failed,Помилка входу
+uk,signup_failed,Помилка реєстрації
+uk,user_role_missing,Роль відсутня.
+uk,profile_not_found,Профіль не знайдено.
+uk,job_created,Роботу створено!
+uk,job_creation_failed,Помилка створення роботи
+uk,job_fetch_failed,Помилка завантаження робіт
+uk,total_earnings,Загальний заробіток
+uk,premium_info,Преміум скоро.
+uk,boosts_info,Бусти скоро.
+uk,admin_info,Admin тут.
+uk,payment_success,Платіж успішний!
+uk,payment_failure,Платіж не вдався.
+uk,payment_cancelled,Платіж скасовано.
+uk,stripe_error,Проблема Stripe
+uk,welcome_driver,Ласкаво просимо, Водій!
+uk,welcome_dispatch,Ласкаво просимо, Диспетчер!
+uk,welcome_admin,Ласкаво просимо, Admin!
+
+# --- Turkish (tr) ---
+tr,select_language,Dil seç
+tr,sign_in,Giriş Yap
+tr,sign_up,Kayıt Ol
+tr,email,E-posta
+tr,password,Şifre
+tr,logout,Çıkış
+tr,user_label,Kullanıcı
+tr,role_label,Rol
+tr,role_driver,Sürücü
+tr,role_dispatch,Gönderici
+tr,role_admin,Admin
+tr,navigation_menu,Göster
+tr,dashboard,Pano
+tr,earnings,Kazançlar
+tr,boosts,Boostlar
+tr,premium,Premium
+tr,admin_panel,Admin Paneli
+tr,create_job,İş Oluştur
+tr,title,Başlık
+tr,expense,Gider
+tr,revenue,Gelir
+tr,latitude,Enlem
+tr,longitude,Boylam
+tr,your_jobs,İşlerim
+tr,no_jobs,İş yok.
+tr,title_required,Başlık gerekli.
+tr,email_password_required,E-posta ve şifre gerekli.
+tr,login_success,Giriş başarılı!
+tr,signup_success,Hesap oluşturuldu! E-postanı kontrol et.
+tr,login_failed,Giriş başarısız
+tr,signup_failed,Kayıt başarısız
+tr,user_role_missing,Rol eksik.
+tr,profile_not_found,Profil bulunamadı.
+tr,job_created,İş oluşturuldu!
+tr,job_creation_failed,İş oluşturma hatası
+tr,job_fetch_failed,İşler yüklenemedi
+tr,total_earnings,Toplam kazanç
+tr,premium_info,Premium özellikler yakında.
+tr,boosts_info,Boostlar yakında.
+tr,admin_info,Admin kontrolleri burada.
+tr,payment_success,Ödeme başarılı!
+tr,payment_failure,Ödeme başarısız.
+tr,payment_cancelled,Ödeme iptal edildi.
+tr,stripe_error,Stripe hatası
+tr,welcome_driver,Hoş geldin, Sürücü!
+tr,welcome_dispatch,Hoş geldin, Gönderici!
+tr,welcome_admin,Hoş geldin, Admin!
