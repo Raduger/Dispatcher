@@ -1,35 +1,38 @@
-# utils/translations.py
 import csv
 import os
-from typing import Dict
 
-TRANSLATIONS_FILE = os.path.join(os.path.dirname(__file__), "translations.csv")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CSV_PATH = os.path.join(BASE_DIR, "translations.csv")
 
-def load_translations(lang: str) -> Dict[str, str]:
+
+def load_translations(language: str) -> dict:
     """
-    Load translations for a given language from translations.csv.
-    Falls back to English if key is missing in the chosen language.
+    Load translations for a given language from CSV.
+    Falls back to English.
     """
+
+    if not os.path.exists(CSV_PATH):
+        raise FileNotFoundError(
+            f"Translation file missing! Expected at: {CSV_PATH}"
+        )
+
     translations = {}
     fallback = {}
 
-    # First, load English fallback
-    with open(TRANSLATIONS_FILE, newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
+    with open(CSV_PATH, newline="", encoding="utf-8") as csvfile:
+        reader = csv.DictReader(csvfile)
         for row in reader:
-            if row["language"] == "en":
-                fallback[row["key"]] = row["value"]
+            lang = row["language"].strip()
+            key = row["key"].strip()
+            value = row["value"].strip()
 
-    # Load selected language
-    with open(TRANSLATIONS_FILE, newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            if row["language"] == lang:
-                translations[row["key"]] = row["value"]
+            if lang == "en":
+                fallback[key] = value
+            if lang == language:
+                translations[key] = value
 
-    # Ensure fallback to English if key missing
-    for key, val in fallback.items():
-        if key not in translations:
-            translations[key] = val
+    # fallback to English if key missing
+    for k, v in fallback.items():
+        translations.setdefault(k, v)
 
     return translations
