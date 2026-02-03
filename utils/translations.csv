@@ -54,6 +54,9 @@ en,select_role,Select your role
 en,role_driver,DRIVER
 en,role_dispatch,DISPATCH
 en,role_admin,ADMIN
+en,subscription_required,Subscription required
+en,pay_now,Pay Now
+en,subscribe_boost,Subscribe to Boost
 sw,login,Ingia
 sw,email,Barua pepe
 sw,password,Neno la siri
@@ -109,6 +112,9 @@ sw,select_role,Chagua cheo chako
 sw,role_driver,DEREVA
 sw,role_dispatch,MSIMAMIZI
 sw,role_admin,ADMIN
+sw,subscription_required,Inahitajika Usajili
+sw,pay_now,Lipa Sasa
+sw,subscribe_boost,Jisajili Nyongeza
 de,login,Anmelden
 de,email,E-Mail
 de,password,Passwort
@@ -164,6 +170,9 @@ de,select_role,Wählen Sie Ihre Rolle
 de,role_driver,FAHRER
 de,role_dispatch,DISPATCH
 de,role_admin,ADMIN
+de,subscription_required,Abonnement erforderlich
+de,pay_now,Jetzt bezahlen
+de,subscribe_boost,Boost abonnieren
 it,login,Accedi
 it,email,Email
 it,password,Password
@@ -219,6 +228,9 @@ it,select_role,Seleziona il tuo ruolo
 it,role_driver,AUTISTA
 it,role_dispatch,DISPATCH
 it,role_admin,ADMIN
+it,subscription_required,Abbonamento richiesto
+it,pay_now,Paga ora
+it,subscribe_boost,Abbonati a Boost
 fr,login,Connexion
 fr,email,Email
 fr,password,Mot de passe
@@ -274,6 +286,9 @@ fr,select_role,Sélectionnez votre rôle
 fr,role_driver,CHAUFFEUR
 fr,role_dispatch,DISPATCH
 fr,role_admin,ADMIN
+fr,subscription_required,Abonnement requis
+fr,pay_now,Payer maintenant
+fr,subscribe_boost,S'abonner au Boost
 pt,login,Entrar
 pt,email,Email
 pt,password,Senha
@@ -329,6 +344,9 @@ pt,select_role,Selecione seu cargo
 pt,role_driver,MOTORISTA
 pt,role_dispatch,DISPATCH
 pt,role_admin,ADMIN
+pt,subscription_required,Assinatura necessária
+pt,pay_now,Pague agora
+pt,subscribe_boost,Assine Boost
 es,login,Iniciar sesión
 es,email,Correo electrónico
 es,password,Contraseña
@@ -384,6 +402,9 @@ es,select_role,Selecciona tu rol
 es,role_driver,CONDUCTOR
 es,role_dispatch,DISPATCH
 es,role_admin,ADMIN
+es,subscription_required,Se requiere suscripción
+es,pay_now,Pagar ahora
+es,subscribe_boost,Suscribirse a Boost
 tr,login,Giriş Yap
 tr,email,E-posta
 tr,password,Şifre
@@ -439,6 +460,9 @@ tr,select_role,Rol seçin
 tr,role_driver,SÜRÜCÜ
 tr,role_dispatch,DISPATCH
 tr,role_admin,ADMIN
+tr,subscription_required,Abonelik gerekli
+tr,pay_now,Şimdi Öde
+tr,subscribe_boost,Boost'a Abone Ol
 nl,login,Inloggen
 nl,email,E-mail
 nl,password,Wachtwoord
@@ -494,6 +518,9 @@ nl,select_role,Kies uw rol
 nl,role_driver,CHAUFFEUR
 nl,role_dispatch,DISPATCH
 nl,role_admin,ADMIN
+nl,subscription_required,Abonnement vereist
+nl,pay_now,Nu betalen
+nl,subscribe_boost,Abonneer op Boost
 ru,login,Войти
 ru,email,Эл. почта
 ru,password,Пароль
@@ -549,6 +576,9 @@ ru,select_role,Выберите роль
 ru,role_driver,ВОДИТЕЛЬ
 ru,role_dispatch,ДИСПЕТЧЕР
 ru,role_admin,АДМИН
+ru,subscription_required,Требуется подписка
+ru,pay_now,Оплатить сейчас
+ru,subscribe_boost,Подписка на Boost
 uk,login,Увійти
 uk,email,Ел. пошта
 uk,password,Пароль
@@ -604,3 +634,6 @@ uk,select_role,Виберіть роль
 uk,role_driver,ВОДІЙ
 uk,role_dispatch,ДИСПЕТЧЕР
 uk,role_admin,АДМІН
+uk,subscription_required,Потрібна підписка
+uk,pay_now,Оплатити зараз
+uk,subscribe_boost,Підписатися на Boost
